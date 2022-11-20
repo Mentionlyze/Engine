@@ -1,5 +1,6 @@
 #pragma once
-#include "../Engine.h"
+
+#include "Engine/Application.h"
 
 #ifdef ENGINE_PLATFORM_WINDOWS
 

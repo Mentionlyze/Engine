@@ -1,6 +1,6 @@
 #include "Precompile.h"
 #include "WindowsWindow.h"
-#include <Engine.h>
+#include "Engine/Log.h"
 
 namespace Engine
 {
@@ -18,7 +18,7 @@ namespace Engine
 
 	WindowsWindow::~WindowsWindow()
 	{
-		Shutdow();
+		Shutdown();
 	}
 
 	void WindowsWindow::Init(const WindowProps& props)
@@ -44,7 +44,7 @@ namespace Engine
 		SetVSync(true);
 	}
 
-	void WindowsWindow::Shutdow()
+	void WindowsWindow::Shutdown()
 	{
 		glfwDestroyWindow(m_Window);
 	}
