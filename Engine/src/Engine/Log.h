@@ -27,7 +27,7 @@ namespace Engine {
 #define ENGINE_CORE_CRITICAL(...) ::Engine::Log::GetCoreLogger()->critical(__VA_ARGS__)
 
 // Cline log macros
-#define ENGINE_RACE(...)	::Engine::Log::GetClientLogger()->trace(__VA_ARGS__)
+#define ENGINE_TRACE(...)	::Engine::Log::GetClientLogger()->trace(__VA_ARGS__)
 #define ENGINE_INFO(...)	::Engine::Log::GetClientLogger()->info(__VA_ARGS__)
 #define ENGINE_WARN(...)	::Engine::Log::GetClientLogger()->warn(__VA_ARGS__)
 #define ENGINE_ERROR(...)	::Engine::Log::GetClientLogger()->error(__VA_ARGS__)

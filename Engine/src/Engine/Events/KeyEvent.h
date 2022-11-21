@@ -21,20 +21,20 @@ namespace Engine
 	{
 	public:
 		KeyPressedEvent(int keycode, bool isRepeat = false)
-			: KeyEvent(keycode), m_IsRepeat(isRepeat) {}
+			: KeyEvent(keycode), m_RepeatCount(isRepeat) {}
 
-		bool IsRepeat() const { return m_IsRepeat; }
+		bool IsRepeat() const { return m_RepeatCount; }
 
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "KeyPressedEvent: " << m_KeyCode << " (repeat = " << m_IsRepeat << ")";
+			ss << "KeyPressedEvent: " << m_KeyCode << " (repeat = " << m_RepeatCount << ")";
 			return ss.str();
 		}
 
 		EVENT_CLASS_TYPE(KeyPressed)
 	private:
-		bool m_IsRepeat;
+		bool m_RepeatCount;
 	};
 
 	class KeyReleasedEvent : public KeyEvent
