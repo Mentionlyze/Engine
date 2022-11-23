@@ -4,6 +4,8 @@
 
 #include <glad/glad.h>
 
+#include "Engine/Input.h"
+
 namespace Engine {
 
 #define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
@@ -30,12 +32,13 @@ namespace Engine {
 			glClearColor(1, 0, 1, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			m_ImGuiLayer->Begin();
-
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
 
-			m_ImGuiLayer->OnImGuiRender();
+			m_ImGuiLayer->Begin();
+
+			for (Layer* layer : m_LayerStack)
+				layer->OnImGuiRender();
 
 			m_ImGuiLayer->End();
 
@@ -48,7 +51,7 @@ namespace Engine {
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
 
-		ENGINE_CORE_TRACE("{0}", e);
+		//ENGINE_CORE_TRACE("{0}", e);
 
 		for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
 		{

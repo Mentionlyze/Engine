@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Event.h"
+#include "Engine/Events/Event.h"
 
 namespace Engine
 {
@@ -41,7 +41,7 @@ namespace Engine
 		}
 
 		EVENT_CLASS_TYPE(MouseScrolled)
-			EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
+		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 	private:
 		float m_XOffset, m_YOffset;
 	};

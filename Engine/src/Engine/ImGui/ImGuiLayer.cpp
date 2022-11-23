@@ -54,17 +54,15 @@ namespace Engine
 
 	void ImGuiLayer::OnDetach()
 	{
-
+		ImGui_ImplGlfw_Shutdown();
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui::DestroyContext();
 	}
 
 	void ImGuiLayer::OnImGuiRender()
 	{
 		static bool show;
 		ImGui::ShowDemoWindow(&show);
-	}
-
-	void ImGuiLayer::OnEvent(Event& e)
-	{
 	}
 
 	void ImGuiLayer::Begin()
@@ -77,6 +75,10 @@ namespace Engine
 	void ImGuiLayer::End()
 	{
 		ImGuiIO& io = ImGui::GetIO();
+
+		Application& app = Application::Get();
+		io.DisplaySize = ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
+
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

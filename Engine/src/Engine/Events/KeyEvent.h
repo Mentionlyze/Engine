@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Event.h"
+#include "Engine/Events/Event.h"
 
 namespace Engine
 {
-	class ENGINE_API KeyEvent : public Event
+	class KeyEvent : public Event
 	{
 	public:
 		int GetKeyCode() const { return m_KeyCode; }
@@ -21,26 +21,26 @@ namespace Engine
 	{
 	public:
 		KeyPressedEvent(int keycode, bool isRepeat = false)
-			: KeyEvent(keycode), m_RepeatCount(isRepeat) {}
+			: KeyEvent(keycode),  m_IsRepeat(isRepeat){}
 
-		bool IsRepeat() const { return m_RepeatCount; }
+		bool IsRepeat() const { return m_IsRepeat; }
 
 		std::string ToString() const override
 		{
 			std::stringstream ss;
-			ss << "KeyPressedEvent: " << m_KeyCode << " (repeat = " << m_RepeatCount << ")";
+			ss << "KeyPressedEvent: " << m_KeyCode << " (repeat = " << m_IsRepeat << ")";
 			return ss.str();
 		}
 
 		EVENT_CLASS_TYPE(KeyPressed)
 	private:
-		bool m_RepeatCount;
+		bool m_IsRepeat;
 	};
 
 	class KeyReleasedEvent : public KeyEvent
 	{
 	public:
-		KeyReleasedEvent(int keycode)
+		KeyReleasedEvent(int keycode, bool isRepeat = false)
 			: KeyEvent(keycode) {}
 
 		std::string ToString() const override
@@ -53,7 +53,6 @@ namespace Engine
 		EVENT_CLASS_TYPE(KeyReleased)
 
 	private:
-		int m_RepeatCount;
 	};
 
 	class KeyTypedEvent : public KeyEvent

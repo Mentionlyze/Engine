@@ -17,3 +17,5 @@
 #include <Windows.h>
 #endif // ENGINE_PLATFORM_WINDOWS
 
+#include "Engine/Log.h"
+

@@ -3,11 +3,6 @@
 
 namespace Engine
 {
-	LayerStack::LayerStack()
-	{
-		m_LayerInsert = m_Layers.begin();
-	}
-
 	LayerStack::~LayerStack()
 	{
 		for (Layer* layer : m_Layers)
@@ -16,7 +11,8 @@ namespace Engine
 
 	void LayerStack::PushLayer(Layer* layer)
 	{
-		m_LayerInsert = m_Layers.emplace(m_LayerInsert, layer);
+		m_Layers.emplace(m_Layers.begin() + m_LayerInsert, layer);
+		m_LayerInsert++;
 	}
 
 	void LayerStack::PushOverLay(Layer* overlay)
