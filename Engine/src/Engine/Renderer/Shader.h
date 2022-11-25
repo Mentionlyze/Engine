@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 namespace Engine
 {
 	class Shader
@@ -10,6 +12,10 @@ namespace Engine
 
 		void Bind() const;
 		void Unbind() const;
+
+		void SetMat4(const std::string& name, const glm::mat4& value);
+
+		void UpdateUniformMat4(const std::string& name, const glm::mat4& matrix);
 
 		static Shader* Create(const std::string& vertexSource, const std::string& fragmentSource)
 		{
