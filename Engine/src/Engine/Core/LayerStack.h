@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Engine/Core.h"
-#include "Engine/Layer.h"
+#include "Engine/Core/Layer.h"
 
 #include <vector>
 

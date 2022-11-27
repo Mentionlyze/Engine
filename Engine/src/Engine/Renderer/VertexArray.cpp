@@ -4,8 +4,8 @@
 
 namespace Engine
 {
-	VertexArray* VertexArray::Create()
+	Ref<VertexArray> VertexArray::Create()
 	{
-		return new OpenGLVertexArray();
+		return CreateRef<OpenGLVertexArray>();
 	}
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/Window.h"
+#include "Engine/Core/Window.h"
 #include "Engine/Renderer/GraphicsContext.h"
 
 #include "GLFW/glfw3.h"
@@ -23,7 +23,7 @@ namespace Engine {
 		void SetVSync(bool enabled) override;
 		bool IsVSync() const override;
 
-		virtual void* GetNativeWindow() const { return m_Window; }
+		virtual void* GetNativeWindow() const override { return m_Window; }
 	private:
 		virtual void Init(const WindowProps& props);
 		virtual void Shutdown();

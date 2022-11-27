@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Engine/Core.h"
-#include "Engine/KeyCodes.h"
-#include "Engine/MouseCodes.h"
+#include "Engine/Core/KeyCodes.h"
+#include "Engine/Core/MouseCodes.h"
 
 namespace Engine
 {

@@ -7,23 +7,12 @@ namespace Engine
 	class Shader
 	{
 	public:
-		Shader(const std::string& vertexSource, const std::string& fragmentSource);
-		~Shader();
+		virtual ~Shader() = default;
 
-		void Bind() const;
-		void Unbind() const;
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
 
-		void SetMat4(const std::string& name, const glm::mat4& value);
-
-		void UpdateUniformMat4(const std::string& name, const glm::mat4& matrix);
-
-		static Shader* Create(const std::string& vertexSource, const std::string& fragmentSource)
-		{
-			return new Shader(vertexSource, fragmentSource);
-		}
-
-	private:
-		uint32_t m_RendererID;
+		static Ref<Shader> Create(const std::string& vertexSource, const std::string& fragmentSource);
 	};
 }
 

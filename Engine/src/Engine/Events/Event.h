@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Precompile.h"
-#include "Engine/Core.h"
 
 namespace Engine
 {
@@ -81,5 +80,4 @@ namespace Engine
 	{
 		return os << e.ToString();
 	}
-
 }

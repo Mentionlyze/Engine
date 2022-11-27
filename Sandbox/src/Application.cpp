@@ -2,33 +2,40 @@
 #include <imgui/imgui.h>
 
 #include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include "PlatForm/OpenGL/OpenGLShader.h"
 
 class ExampleLayer : public Engine::Layer
 {
 public:
-	ExampleLayer() : Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f)
+	ExampleLayer() 
+		: Layer("Example"), 
+		  m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), 
+		  m_CameraPosition({0.0f, 0.0f, 0.0f})
 	{
-		m_VertexArray.reset(Engine::VertexArray::Create());
+		m_VertexArray = Engine::VertexArray::Create();
 
-		float vertices[3 * 7] = {
-			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-			 0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-			 0.0f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f,
+		float vertices[4 * 5] = {
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
 		};
 
-		m_VerteBuffer.reset(Engine::VertexBuffer::Create(vertices, sizeof(vertices)));
+		m_VerteBuffer = Engine::VertexBuffer::Create(vertices, sizeof(vertices));
 		Engine::BufferLayout layout = {
 			{ Engine::ShaderDataType::Float3, "a_Pos" },
-			{ Engine::ShaderDataType::Float4, "a_Color" }
+			{ Engine::ShaderDataType::Float2, "a_TexCoord" }
 		};
 
 		m_VerteBuffer->SetLayout(layout);
 
 		m_VertexArray->AddVertexBuffer(m_VerteBuffer);
 	
-		unsigned int indices[3] = { 0, 1, 2 };
+		unsigned int indices[6] = { 0, 1, 2, 2, 3, 0 };
 
-		m_IndexBuffer.reset(Engine::IndexBuffer::Create(indices, (sizeof(indices) / sizeof(uint32_t))));
+		m_IndexBuffer = Engine::IndexBuffer::Create(indices, (sizeof(indices) / sizeof(uint32_t)));
 
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 
@@ -36,9 +43,9 @@ public:
 			#version 330 core
 			
 			layout(location = 0) in vec3 a_Pos;
-			layout(location = 1) in vec4 a_Color;
+			layout(location = 1) in vec2 a_TexCoord;
 			
-			out vec4 v_Color;
+			out vec2 v_TexCoord;
 
 			uniform mat4 u_ViewProjection;
 			uniform mat4 u_Transform;
@@ -46,40 +53,90 @@ public:
 			void main()
 			{
 				gl_Position = u_ViewProjection * u_Transform * vec4(a_Pos, 1.0f);
-				v_Color = a_Color;
+				v_TexCoord = a_TexCoord;
 			}
 		)";
 
 		std::string fragmentSrc = R"(
 			#version 330 core
 		
-			in vec4 v_Color;	
+			in vec2 v_TexCoord;	
 			out vec4 color;	
+			uniform vec3 u_Color;
+
+			uniform sampler2D u_Texture;
 
 			void main()
 			{
-				color = v_Color;
+				color = texture(u_Texture, v_TexCoord);
 			}
 		)";
 
-		m_Shader.reset(Engine::Shader::Create(vertexSrc, fragmentSrc));
+		m_Shader = Engine::Shader::Create(vertexSrc, fragmentSrc);
 
+		m_Texture = Engine::Texture2D::Create("assets/Checkerboard.png");
+		m_LogoTexture = Engine::Texture2D::Create("assets/ChernoLogo.png");
+
+		m_Shader->Bind();
+		std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetInt("u_Texture", 0);
+		m_LogoTexture->Bind();
+		std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetInt("u_Texture", 0);
 	}
 
-	void OnUpdate() override
+	void OnUpdate(Engine::Timestep ts) override
 	{
+
+		if (Engine::Input::IsKeyPressed(Engine::Key::Left))
+			m_CameraPosition.x -= m_CameraMoveSpeed * ts;
+		else if (Engine::Input::IsKeyPressed(Engine::Key::Right))
+			m_CameraPosition.x += m_CameraMoveSpeed * ts;
+		else if (Engine::Input::IsKeyPressed(Engine::Key::Up))
+			m_CameraPosition.y += m_CameraMoveSpeed * ts;
+		else if (Engine::Input::IsKeyPressed(Engine::Key::Down))
+			m_CameraPosition.y -= m_CameraMoveSpeed * ts;
+
+		else if (Engine::Input::IsKeyPressed(Engine::Key::A))
+			m_CameraRotation += m_CameraRotateSpeed * ts;
+		else if (Engine::Input::IsKeyPressed(Engine::Key::D))
+			m_CameraRotation -= m_CameraRotateSpeed * ts;
+
+
 		Engine::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Engine::RenderCommand::Clear();
 
+		m_Camera.SetPosition(m_CameraPosition);
+		m_Camera.SetRotation(m_CameraRotation);
+
 		Engine::Renderer::BeginScene(m_Camera);
-		Engine::Renderer::Submit(m_VertexArray, m_Shader, glm::mat4(1.0f));
+
+		m_Shader->Bind();
+		std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->setFloat3("u_Color", m_SquareColor);
+
+		/*glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+		for (unsigned int r = 0; r < 20; r++)
+		{
+			for (unsigned int c = 0; c < 20; c++)
+			{
+				glm::vec3 pos = glm::vec3(0.11f * c, 0.11f * r, 0.0f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+				Engine::Renderer::Submit(m_VertexArray, m_Shader, transform);
+			}
+		}*/
+
+
+		m_Texture->Bind();
+		Engine::Renderer::Submit(m_VertexArray, m_Shader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		m_LogoTexture->Bind();
+		Engine::Renderer::Submit(m_VertexArray, m_Shader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
 		Engine::Renderer::EndScene();
 	}
 
 	void OnImGuiRender() override
 	{
 		ImGui::Begin("start");
-		ImGui::Text("Hello UI");
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
 		ImGui::End();
 	}
 
@@ -88,16 +145,24 @@ public:
 		if (event.GetEventType() == Engine::EventType::KeyPressed)
 		{
 			Engine::KeyPressedEvent& e = (Engine::KeyPressedEvent&)event;
-			ENGINE_TRACE("{0}", (char)e.GetKeyCode());
 		}
 	}
 
 private:
-	std::shared_ptr<Engine::Shader> m_Shader;
-	std::shared_ptr<Engine::VertexArray> m_VertexArray;
-	std::shared_ptr<Engine::VertexBuffer> m_VerteBuffer;
-	std::shared_ptr<Engine::IndexBuffer> m_IndexBuffer;
+	Engine::Ref<Engine::Shader> m_Shader;
+	Engine::Ref<Engine::Texture2D> m_Texture;
+	Engine::Ref<Engine::Texture2D> m_LogoTexture;
+	Engine::Ref<Engine::VertexArray> m_VertexArray;
+	Engine::Ref<Engine::VertexBuffer> m_VerteBuffer;
+	Engine::Ref<Engine::IndexBuffer> m_IndexBuffer;
 	Engine::OrthoGraphicsCamera m_Camera;
+	glm::vec3 m_CameraPosition;
+	float m_CameraMoveSpeed = 2.0f;
+
+	float m_CameraRotation = 0.0f;
+	float m_CameraRotateSpeed = 90.0f;
+
+	glm::vec3 m_SquareColor = { 0.2, 0.3, 0.7 };
 };
 
 

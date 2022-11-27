@@ -1,13 +1,15 @@
 #pragma once
 
-#include "Core.h"
-#include "Window.h"
-#include "LayerStack.h"
+#include "Engine/Core/Window.h"
+#include "Engine/Core/Layer.h"
+#include "Engine/Core/LayerStack.h"
 #include "Engine/Events/ApplicationEvent.h"
 #include "Engine/ImGui/ImGuiLayer.h"
 #include "Engine/Renderer/Shader.h"
 #include "Engine/Renderer/Buffer.h"
 #include "Engine/Renderer/VertexArray.h"
+
+#include "Engine/Core/Timestep.h"
 
 namespace Engine {
 
@@ -37,7 +39,8 @@ namespace Engine {
 
 		bool m_Running = true;
 		LayerStack m_LayerStack;
-
+		
+		float m_lastFrameTime = 0.0f;
 	
 	private:
 		static Application* s_Instance;
