@@ -1,10 +1,10 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "Engine/Renderer/Camera.h"
 
 namespace Engine
 {
-	class OrthoGraphicsCamera
+	class OrthoGraphicsCamera : public Camera
 	{
 	public:
 		OrthoGraphicsCamera(float left, float right, float top, float bottom);

@@ -5,6 +5,7 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "PlatForm/OpenGL/OpenGLShader.h"
+#include "PlatForm/OpenGL/OrthoGraphicCamera.h"
 
 class ExampleLayer : public Engine::Layer
 {
@@ -72,15 +73,18 @@ public:
 			}
 		)";
 
-		m_Shader = Engine::Shader::Create(vertexSrc, fragmentSrc);
 
-		m_Texture = Engine::Texture2D::Create("assets/Checkerboard.png");
-		m_LogoTexture = Engine::Texture2D::Create("assets/ChernoLogo.png");
+		auto textureShader = Engine::Renderer::GetShaderLibrary()->Load("texture_shader", vertexSrc, fragmentSrc);
+		textureShader->Bind();
 
-		m_Shader->Bind();
-		std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetInt("u_Texture", 0);
-		m_LogoTexture->Bind();
-		std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetInt("u_Texture", 0);
+		m_Texture = Engine::Texture2D::Create("assets/textures/Checkerboard.png");
+		m_LogoTexture = Engine::Texture2D::Create("assets/textures/ChernoLogo.png");
+
+		std::dynamic_pointer_cast<Engine::OpenGLShader>(textureShader)->SetInt("u_Texture", 0);
+		std::dynamic_pointer_cast<Engine::OpenGLShader>(textureShader)->SetInt("u_Texture", 0);
+
+		m_QubeShader = Engine::Shader::Create("assets/shaders/Qube.vert", "assets/shaders/Qube.frag");
+		m_QubeShader->Bind();
 	}
 
 	void OnUpdate(Engine::Timestep ts) override
@@ -109,10 +113,7 @@ public:
 
 		Engine::Renderer::BeginScene(m_Camera);
 
-		m_Shader->Bind();
-		std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->setFloat3("u_Color", m_SquareColor);
-
-		/*glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
 		for (unsigned int r = 0; r < 20; r++)
 		{
@@ -120,15 +121,16 @@ public:
 			{
 				glm::vec3 pos = glm::vec3(0.11f * c, 0.11f * r, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-				Engine::Renderer::Submit(m_VertexArray, m_Shader, transform);
+				Engine::Renderer::Submit(m_VertexArray, m_QubeShader, transform);
 			}
-		}*/
+		}
 
+		auto textureShader = Engine::Renderer::GetShaderLibrary()->Get("texture_shader");
 
 		m_Texture->Bind();
-		Engine::Renderer::Submit(m_VertexArray, m_Shader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Engine::Renderer::Submit(m_VertexArray, textureShader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 		m_LogoTexture->Bind();
-		Engine::Renderer::Submit(m_VertexArray, m_Shader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Engine::Renderer::Submit(m_VertexArray, textureShader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		Engine::Renderer::EndScene();
 	}
@@ -150,6 +152,7 @@ public:
 
 private:
 	Engine::Ref<Engine::Shader> m_Shader;
+	Engine::Ref<Engine::Shader> m_QubeShader;
 	Engine::Ref<Engine::Texture2D> m_Texture;
 	Engine::Ref<Engine::Texture2D> m_LogoTexture;
 	Engine::Ref<Engine::VertexArray> m_VertexArray;

@@ -5,13 +5,14 @@
 namespace Engine
 {
 	Renderer::SceneData* Renderer::s_SceneData = new Renderer::SceneData;
+	Ref<ShaderLibrary> Renderer::s_ShaderLibrary = CreateRef<ShaderLibrary>();
 
 	void Renderer::Init()
 	{
 		RenderCommand::Init();
 	}
 
-	void Renderer::BeginScene(OrthoGraphicsCamera& camera)
+	void Renderer::BeginScene(Camera& camera)
 	{
 		s_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
 	}

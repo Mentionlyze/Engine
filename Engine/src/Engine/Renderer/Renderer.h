@@ -5,7 +5,7 @@
 
 #include "RenderCommand.h"
 #include "Engine/Renderer/Shader.h"
-#include "Engine/Renderer/OrthoGraphicCamera.h"
+#include "Engine/Renderer/Camera.h"
 
 namespace Engine
 {
@@ -13,9 +13,11 @@ namespace Engine
 	{
 	public:
 		static void Init();
-		static void BeginScene(OrthoGraphicsCamera& camera);
+		static void BeginScene(Camera& camera);
 		static void EndScene();
 		static void Submit(const Ref<VertexArray>& vertexArray, const Ref<Shader>& shader, const glm::mat4& transform);
+		static Ref<ShaderLibrary> GetShaderLibrary() { return s_ShaderLibrary; }
+
 	private:
 		struct SceneData
 		{
@@ -23,5 +25,6 @@ namespace Engine
 		};
 
 		static SceneData* s_SceneData;
+		static Ref<ShaderLibrary> s_ShaderLibrary;
 	};
 }
