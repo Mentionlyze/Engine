@@ -15,9 +15,6 @@
 #include "Engine/Core/KeyCodes.h"
 #include "Engine/Core/MouseCodes.h"
 
-// -- Entry Point --
-// -----------------------
-#include "Engine/Core/EntryPoint.h"
 
 // -- Time Step --
 // -----------------------
@@ -30,6 +27,9 @@
 #include "Engine/Renderer/VertexArray.h"
 #include "Engine/Renderer/Shader.h"
 #include "Engine/Renderer/Texture.h"
+
+#include "PlatForm/OpenGL/OrthoGraphicCameraController.h"
+#include "PlatForm/OpenGL/OpenGLShader.h"
 
 #include "Engine/ImGui/ImGuiLayer.h"
 
