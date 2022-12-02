@@ -5,15 +5,14 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "PlatForm/OpenGL/OpenGLShader.h"
-#include "PlatForm/OpenGL/OrthoGraphicCamera.h"
+#include "PlatForm/OpenGL/OrthoGraphicCameraController.h"
 
 class ExampleLayer : public Engine::Layer
 {
 public:
 	ExampleLayer() 
 		: Layer("Example"), 
-		  m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), 
-		  m_CameraPosition({0.0f, 0.0f, 0.0f})
+		  m_CameraController(1.6f / 0.9f, true)
 	{
 		m_VertexArray = Engine::VertexArray::Create();
 
@@ -84,34 +83,20 @@ public:
 		std::dynamic_pointer_cast<Engine::OpenGLShader>(textureShader)->SetInt("u_Texture", 0);
 
 		m_QubeShader = Engine::Shader::Create("assets/shaders/Qube.vert", "assets/shaders/Qube.frag");
-		m_QubeShader->Bind();
 	}
 
 	void OnUpdate(Engine::Timestep ts) override
 	{
 
-		if (Engine::Input::IsKeyPressed(Engine::Key::Left))
-			m_CameraPosition.x -= m_CameraMoveSpeed * ts;
-		else if (Engine::Input::IsKeyPressed(Engine::Key::Right))
-			m_CameraPosition.x += m_CameraMoveSpeed * ts;
-		else if (Engine::Input::IsKeyPressed(Engine::Key::Up))
-			m_CameraPosition.y += m_CameraMoveSpeed * ts;
-		else if (Engine::Input::IsKeyPressed(Engine::Key::Down))
-			m_CameraPosition.y -= m_CameraMoveSpeed * ts;
-
-		else if (Engine::Input::IsKeyPressed(Engine::Key::A))
-			m_CameraRotation += m_CameraRotateSpeed * ts;
-		else if (Engine::Input::IsKeyPressed(Engine::Key::D))
-			m_CameraRotation -= m_CameraRotateSpeed * ts;
-
+		m_CameraController.OnUpdate(ts);
 
 		Engine::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Engine::RenderCommand::Clear();
 
-		m_Camera.SetPosition(m_CameraPosition);
-		m_Camera.SetRotation(m_CameraRotation);
+		Engine::Renderer::BeginScene(m_CameraController.GetCamera());
 
-		Engine::Renderer::BeginScene(m_Camera);
+		m_QubeShader->Bind();
+		std::dynamic_pointer_cast<Engine::OpenGLShader>(m_QubeShader)->setFloat3("u_Color", m_SquareColor);
 
 		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
@@ -144,10 +129,7 @@ public:
 
 	void OnEvent(Engine::Event& event) override
 	{
-		if (event.GetEventType() == Engine::EventType::KeyPressed)
-		{
-			Engine::KeyPressedEvent& e = (Engine::KeyPressedEvent&)event;
-		}
+		m_CameraController.OnEvent(event);
 	}
 
 private:
@@ -158,12 +140,7 @@ private:
 	Engine::Ref<Engine::VertexArray> m_VertexArray;
 	Engine::Ref<Engine::VertexBuffer> m_VerteBuffer;
 	Engine::Ref<Engine::IndexBuffer> m_IndexBuffer;
-	Engine::OrthoGraphicsCamera m_Camera;
-	glm::vec3 m_CameraPosition;
-	float m_CameraMoveSpeed = 2.0f;
-
-	float m_CameraRotation = 0.0f;
-	float m_CameraRotateSpeed = 90.0f;
+	Engine::OrthoGraphicCameraController m_CameraController;
 
 	glm::vec3 m_SquareColor = { 0.2, 0.3, 0.7 };
 };

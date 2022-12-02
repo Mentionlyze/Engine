@@ -10,7 +10,6 @@
 
 namespace Engine {
 
-#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
 
 	Application* Application::s_Instance = nullptr;
 
@@ -20,7 +19,7 @@ namespace Engine {
 		s_Instance = this;
 
 		m_Window = std::unique_ptr<Window>(Window::Create()); 
-		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+		m_Window->SetEventCallback(ENGINE_BIND_EVENT_FN(Application::OnEvent));
 
 		Renderer::Init();
 
@@ -34,14 +33,17 @@ namespace Engine {
 	{
 		while (m_Running)
 		{
-			float time = glfwGetTime();
-			Timestep ts = time - m_lastFrameTime;
-			m_lastFrameTime = time;
-
-			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate(ts);
-
 			m_ImGuiLayer->Begin();
+
+			if (!m_Minimized)
+			{
+				float time = glfwGetTime();
+				Timestep ts = time - m_lastFrameTime;
+				m_lastFrameTime = time;
+
+				for (Layer* layer : m_LayerStack)
+					layer->OnUpdate(ts);
+			}
 
 			for (Layer* layer : m_LayerStack)
 				layer->OnImGuiRender();
@@ -55,7 +57,8 @@ namespace Engine {
 	void Application::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
+		dispatcher.Dispatch<WindowCloseEvent>(ENGINE_BIND_EVENT_FN(OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(ENGINE_BIND_EVENT_FN(OnWindowResize));
 
 		//ENGINE_CORE_TRACE("{0}", e);
 
@@ -84,5 +87,18 @@ namespace Engine {
 		m_Running = false;
 		
 		return true;
+	}
+	bool Application::OnWindowResize(WindowResizeEvent& e)
+	{
+		if (e.GetWidth() == 0 || e.GetHeight() == 0)
+		{
+			m_Minimized = true;
+			return false;
+		}
+
+		m_Minimized = false;
+
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+		return false;
 	}
 }
