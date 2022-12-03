@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/Events/Event.h"
+#include <glm/glm.hpp>
 
 namespace Engine
 {
@@ -9,6 +10,8 @@ namespace Engine
 	public:
 		MouseMoveEvent(const float x, const float y) : m_MouseX(x), m_MouseY(y)
 		{}
+
+		glm::vec2 GetMousePosition() const { return glm::vec2(m_MouseX, m_MouseY); }
 
 		std::string ToString() const override
 		{

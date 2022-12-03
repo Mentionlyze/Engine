@@ -13,31 +13,31 @@ namespace Engine
 
 	void OrthoGraphicCameraController::OnUpdate(Timestep ts)
 	{
-		if (Engine::Input::IsKeyPressed(Engine::Key::A))
+		if (Input::IsKeyPressed(Key::A))
 		{
 			m_CameraPosition.x -= cos(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 			m_CameraPosition.y -= sin(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 		}
-		else if (Engine::Input::IsKeyPressed(Engine::Key::D))
+		else if (Input::IsKeyPressed(Key::D))
 		{
 			m_CameraPosition.x += cos(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 			m_CameraPosition.y += sin(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 		}
-		else if (Engine::Input::IsKeyPressed(Engine::Key::W))
+		else if (Input::IsKeyPressed(Key::W))
 		{
 			m_CameraPosition.x += -sin(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 			m_CameraPosition.y +=  cos(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 		}
-		else if (Engine::Input::IsKeyPressed(Engine::Key::S))
+		else if (Input::IsKeyPressed(Key::S))
 		{
 			m_CameraPosition.x -= -sin(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 			m_CameraPosition.y -=  cos(glm::radians(m_CameraRotation)) * m_CameraTranslationSpeed * ts;
 		}
 		if (m_RotateEnabled)
 		{
-		if (Engine::Input::IsKeyPressed(Engine::Key::Q))
+		if (Input::IsKeyPressed(Key::Q))
 			m_CameraRotation += m_CameraRotationSpeed * ts;
-		else if (Engine::Input::IsKeyPressed(Engine::Key::E))
+		else if (Input::IsKeyPressed(Key::E))
 			m_CameraRotation -= m_CameraRotationSpeed * ts;
 		}
 
@@ -48,15 +48,14 @@ namespace Engine
 	void OrthoGraphicCameraController::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
-		//dispatcher.Dispatch<MouseScrolledEvent>(ENGINE_BIND_EVENT_FN(OrthoGraphicCameraController::OnMouseScrolled));
+		dispatcher.Dispatch<MouseScrolledEvent>(ENGINE_BIND_EVENT_FN(OrthoGraphicCameraController::OnMouseScrolled));
 		dispatcher.Dispatch<WindowResizeEvent>(ENGINE_BIND_EVENT_FN(OrthoGraphicCameraController::OnWindowResized));
 	}
 
 	bool OrthoGraphicCameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
-		m_ZoomLevel = e.GetYOffset() * 0.25f;
+		m_ZoomLevel -= e.GetYOffset() * 0.25f;
 		m_ZoomLevel = std::max(m_ZoomLevel, 0.25f);
-		ENGINE_CORE_INFO("level: {0}", m_ZoomLevel);
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
 		return false;
 	}

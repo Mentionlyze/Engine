@@ -11,7 +11,8 @@ namespace Engine
 	protected:
 		virtual bool IsKeyPressedImpl(const KeyCode keycode) override;
 		virtual bool IsMouseButtonPressedImpl(const MouseCode button) override;
-		virtual std::pair<float, float> GetMousePositionImpl() override;
+		virtual bool IsMouseButtonReleasedImpl(MouseCode button) override;
+		virtual glm::vec2 GetMousePositionImpl() override;
 		virtual float GetMouseXImpl() override;
 		virtual float GetMouseYImpl() override;
 	};

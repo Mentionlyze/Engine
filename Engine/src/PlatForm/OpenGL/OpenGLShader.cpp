@@ -41,7 +41,7 @@ namespace Engine
 		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
 		auto lastDot = vertexSrcPath.rfind('.');
 		auto count = lastDot == std::string::npos ? vertexSrcPath.size() - lastSlash : lastDot - lastSlash;
-		m_Name = vertexSrcPath.substr(lastSlash, lastDot);
+		m_Name = vertexSrcPath.substr(lastSlash, count);
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource): m_Name(name)

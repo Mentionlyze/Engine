@@ -29,6 +29,7 @@
 #include "Engine/Renderer/Texture.h"
 
 #include "PlatForm/OpenGL/OrthoGraphicCameraController.h"
+#include "PlatForm/OpenGL/PerspectiveCameraController.h"
 #include "PlatForm/OpenGL/OpenGLShader.h"
 
 #include "Engine/ImGui/ImGuiLayer.h"

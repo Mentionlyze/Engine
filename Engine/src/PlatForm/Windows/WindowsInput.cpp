@@ -27,8 +27,17 @@ namespace Engine
 
 		return state == GLFW_PRESS;
 	}
+
+	bool WindowsInput::IsMouseButtonReleasedImpl(MouseCode button)
+	{
+	auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
+
+		auto state = glfwGetMouseButton(window, button);
+
+		return state == GLFW_RELEASE;
+	}
 	
-	std::pair<float, float> WindowsInput::GetMousePositionImpl()
+	glm::vec2 WindowsInput::GetMousePositionImpl()
 	{
 		auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());
 
@@ -36,18 +45,18 @@ namespace Engine
 
 		glfwGetCursorPos(window, &xpos, &ypos);
 
-		return { (float)xpos, (float)ypos };
+		return glm::vec2((float)xpos, (float)ypos);
 	}
 
 	float WindowsInput::GetMouseXImpl()
 	{
-		auto [x, y] = GetMousePositionImpl();
-		return x;
+		auto mousePos = GetMousePositionImpl();
+		return mousePos.x;
 	}
 	
 	float WindowsInput::GetMouseYImpl()
 	{
-		auto [x, y] = GetMousePositionImpl();
-		return y;
+		auto mousePos = GetMousePositionImpl();
+		return mousePos.y;
 	}
 }
