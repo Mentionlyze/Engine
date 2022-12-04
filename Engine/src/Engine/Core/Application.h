@@ -34,7 +34,7 @@ namespace Engine {
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
 
-		std::unique_ptr<Window> m_Window;
+		Scope<Window> m_Window;
 		bool m_Minimized = false;
 
 		ImGuiLayer* m_ImGuiLayer;
