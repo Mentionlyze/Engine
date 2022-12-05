@@ -100,6 +100,7 @@ void Sandbox3D::OnImGuiRender()
 {
     ImGui::Begin("Light");
     ImGui::SliderFloat3("light color", glm::value_ptr(m_LightColor), 0.0f, 1.0f);
+    ImGui::SliderFloat3("light position", glm::value_ptr(m_LightPos), -5.0f, 5.0f);
     ImGui::End();
 }
 
