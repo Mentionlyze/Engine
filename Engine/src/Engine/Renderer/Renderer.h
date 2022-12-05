@@ -23,6 +23,8 @@ namespace Engine
 		struct SceneData
 		{
 			glm::mat4 ViewProjectionMatrix;
+			glm::mat4 ViewMatrix;
+			glm::vec3 CameraPosition;
 		};
 
 		static SceneData* s_SceneData;

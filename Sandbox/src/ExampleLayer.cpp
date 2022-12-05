@@ -71,7 +71,6 @@ ExampleLayer::ExampleLayer() : Layer("Example"), m_CameraController(1.6f / 0.9f,
 	m_LogoTexture = Engine::Texture2D::Create("assets/textures/ChernoLogo.png");
 
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(textureShader)->SetInt("u_Texture", 0);
-	std::dynamic_pointer_cast<Engine::OpenGLShader>(textureShader)->SetInt("u_Texture", 0);
 
 	m_QubeShader = Engine::Shader::Create("assets/shaders/Qube.vert", "assets/shaders/Qube.frag");
 }

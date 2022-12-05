@@ -15,7 +15,7 @@ namespace Engine
 
 		void UpdateRotation();
 
-		const glm::vec3& GetPosition() const { return m_Position; }
+		const glm::vec3& GetPosition() const override { return m_Position; }
 		void SetPosition(const glm::vec3& position)
 		{
 			m_Position = position;
