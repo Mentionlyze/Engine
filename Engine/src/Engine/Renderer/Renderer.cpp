@@ -38,8 +38,6 @@ namespace Engine
 		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_View", s_SceneData->ViewMatrix);
 		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_Transform", transform);
 
-		ENGINE_CORE_INFO("x: {0}, y: {1}, z: {2}", s_SceneData->CameraPosition.x, s_SceneData->CameraPosition.y, s_SceneData->CameraPosition.z);
-
 		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateFloat3("u_ViewPosition", s_SceneData->CameraPosition);
 
 		vertexArray->Bind();
