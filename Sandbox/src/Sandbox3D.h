@@ -27,7 +27,7 @@ private:
 		uint16_t specular;
 		float shininess;
 
-		Material(const glm::vec3& ambient = glm::vec3(0.1f), 
+		Material(const glm::vec3& ambient = glm::vec3(0.3f), 
 			const uint32_t diffuse = 0, 
 			const uint32_t specluar = 1, 
 			const float shininess = 32.0f)

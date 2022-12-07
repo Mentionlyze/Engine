@@ -106,7 +106,7 @@ void Sandbox3D::OnUpdate(Engine::Timestep ts)
     glm::vec3 lightPositionInView = viewMatrix * glm::vec4(lightPosition.x, lightPosition.y, lightPosition.z, 1.0f);
 
     m_Light->ambient =  m_Light->specular * (float)0.2;
-    m_Light->diffuse =  m_Light->specular * (float)0.2;
+    m_Light->diffuse =  m_Light->specular * (float)0.5;
 
     std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->setFloat3("u_Light.position", lightPositionInView);
     std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->setFloat3("u_Light.ambient", m_Light->ambient);
