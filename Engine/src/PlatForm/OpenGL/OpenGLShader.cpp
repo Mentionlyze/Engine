@@ -186,7 +186,7 @@ namespace Engine
 		glUniform1i(location, value);
 	}
 
-	void OpenGLShader::setFloat3(const std::string& name, const glm::vec3& value)
+	void OpenGLShader::SetFloat3(const std::string& name, const glm::vec3& value)
 	{
 		UpdateFloat3(name, value);
 	}

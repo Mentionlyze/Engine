@@ -86,7 +86,7 @@ void ExampleLayer::OnUpdate(Engine::Timestep ts)
 	Engine::Renderer::BeginScene(m_CameraController.GetCamera());
 
 	m_QubeShader->Bind();
-	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_QubeShader)->setFloat3("u_Color", m_SquareColor);
+	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_QubeShader)->SetFloat3("u_Color", m_SquareColor);
 
 	glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
