@@ -7,7 +7,9 @@ MuitLightLayer::MuitLightLayer() : Layer("Sandbox3D"),
     m_CameraController(45.0f, 1.6f / 0.9f, 0.1f, 100.0f),
     m_Material(Engine::CreateRef<Material>()),
     m_DirectLight(Engine::CreateRef<DirectLight>()),
-    m_SpotLight(Engine::CreateRef<SpotLight>())
+    m_SpotLight(Engine::CreateRef<SpotLight>()),
+    m_PointLight(Engine::CreateRef<PointLight>()),
+    m_PointLightColor(glm::vec3(1.0f, 1.0f, 1.0f))
 {
     m_VertexArray = Engine::VertexArray::Create();
     float vertices[8 * 24] = {
@@ -80,7 +82,7 @@ void MuitLightLayer::OnUpdate(Engine::Timestep ts)
 {
     m_CameraController.OnUpdate(ts);
 
-    Engine::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+    Engine::RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1 });
     Engine::RenderCommand::Clear(true);
 
     Engine::Renderer::BeginScene(m_CameraController.GetCamera());
@@ -95,7 +97,7 @@ void MuitLightLayer::OnUpdate(Engine::Timestep ts)
     glm::vec3 cameraFoawardDirection = m_CameraController.GetCamera().GetForwardDirection();
 
     std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetMat4("u_View", viewMatrix);
-    std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat3("u_ViewPos", viewPosition);
+    std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat3("u_ViewPosition", viewPosition);
 
     std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat3("u_Material.ambient", m_Material->ambient);
     std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_Material.shininess", m_Material->shininess);
@@ -105,6 +107,8 @@ void MuitLightLayer::OnUpdate(Engine::Timestep ts)
     std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat3("u_DirectLight.diffuse", m_DirectLight->diffuse);
     std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat3("u_DirectLight.diffuse", m_DirectLight->specular);
 
+
+    std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat3("u_SpotLight.position", viewPosition);
     std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat3("u_SpotLight.direction", cameraFoawardDirection);
     std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat3("u_SpotLight.ambient", m_SpotLight->ambient);
     std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat3("u_SpotLight.diffuse", m_SpotLight->diffuse);
@@ -112,8 +116,8 @@ void MuitLightLayer::OnUpdate(Engine::Timestep ts)
     std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_SpotLight.constant", m_SpotLight->constant);
     std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_SpotLight.linear", m_SpotLight->linear);
     std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_SpotLight.specular", m_SpotLight->quadratic);
-    std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_SpotLight.specular", glm::cos(glm::radians(m_SpotLight->cutoff)));
-    std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_SpotLight.specular", glm::cos(glm::radians(m_SpotLight->outerCutoff)));
+    std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_SpotLight.cutoff", glm::cos(glm::radians(m_SpotLight->cutoff)));
+    std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_SpotLight.outerCutoff", glm::cos(glm::radians(m_SpotLight->outerCutoff)));
 
     for (uint32_t i = 0; i < 10; i++)
     {
@@ -124,6 +128,46 @@ void MuitLightLayer::OnUpdate(Engine::Timestep ts)
         Engine::Renderer::Submit(m_VertexArray, m_Shader, transform);
     }
 
+
+
+    std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat3("u_SpotLight.position", viewPosition);
+    std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat3("u_SpotLight.direction", cameraFoawardDirection);
+    std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat3("u_SpotLight.ambient", m_SpotLight->ambient);
+    std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat3("u_SpotLight.diffuse", m_SpotLight->diffuse);
+    std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat3("u_SpotLight.specular", m_SpotLight->specular);
+    std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_SpotLight.constant", m_SpotLight->constant);
+    std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_SpotLight.linear", m_SpotLight->linear);
+    std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_SpotLight.specular", m_SpotLight->quadratic);
+    std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_SpotLight.cutoff", glm::cos(glm::radians(m_SpotLight->cutoff)));
+
+    auto lightShader = Engine::Renderer::GetShaderLibrary()->Get("LightCube");
+    lightShader->Bind();
+    std::dynamic_pointer_cast<Engine::OpenGLShader>(lightShader)->SetFloat3("u_LightColor", m_PointLight->specular);
+
+    for (uint32_t i = 0; i < 4; i++)
+    {
+        std::string prefix = "u_PointLights[" + std::to_string(i) + "].";
+        std::string positonKey = prefix + "position";
+        std::string constantKey = prefix + "constant";
+        std::string linearKey = prefix + "linear";
+        std::string quadraticKey = prefix + "quadratic";
+        std::string ambientKey = prefix + "ambient";
+        std::string diffuseKey = prefix + "diffuse";
+        std::string specularKey = prefix + "specular";
+
+        std::dynamic_pointer_cast<Engine::OpenGLShader>(lightShader)->SetFloat3(positonKey, m_PointLightPositions[i]);
+        std::dynamic_pointer_cast<Engine::OpenGLShader>(lightShader)->SetFloat(constantKey, m_PointLight->constant);
+        std::dynamic_pointer_cast<Engine::OpenGLShader>(lightShader)->SetFloat(linearKey, m_PointLight->linear);
+        std::dynamic_pointer_cast<Engine::OpenGLShader>(lightShader)->SetFloat(quadraticKey, m_PointLight->quadratic);
+        std::dynamic_pointer_cast<Engine::OpenGLShader>(lightShader)->SetFloat3(ambientKey, m_PointLight->ambient);
+        std::dynamic_pointer_cast<Engine::OpenGLShader>(lightShader)->SetFloat3(diffuseKey, m_PointLight->diffuse);
+        std::dynamic_pointer_cast<Engine::OpenGLShader>(lightShader)->SetFloat3(specularKey, m_PointLight->specular);
+
+        glm::mat4 transform = glm::translate(glm::mat4(1.0f), m_PointLightPositions[i]);
+        transform = glm::scale(transform, glm::vec3(0.2f));
+        Engine::Renderer::Submit(m_VertexArray, lightShader, transform);
+    }
+
     Engine::Renderer::EndScene();
 }
 
@@ -132,6 +176,7 @@ void MuitLightLayer::OnImGuiRender()
     ImGui::Begin("Light");
     ImGui::SliderFloat3("light color", glm::value_ptr(m_DirectLight->specular), 0.0f, 1.0f);
     ImGui::SliderFloat3("light position", glm::value_ptr(m_DirectLight->direction), -5.0f, 5.0f);
+    ImGui::SliderFloat3("pointlight color", glm::value_ptr(m_PointLight->specular), 0.0f, 1.0f);
     ImGui::End();
 }
 

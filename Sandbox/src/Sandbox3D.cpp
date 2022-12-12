@@ -82,7 +82,7 @@ void Sandbox3D::OnUpdate(Engine::Timestep ts)
 {
     m_CameraController.OnUpdate(ts);
 
-	Engine::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+	Engine::RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1 });
 	Engine::RenderCommand::Clear(true);
 
     Engine::Renderer::BeginScene(m_CameraController.GetCamera());

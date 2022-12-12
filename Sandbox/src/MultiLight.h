@@ -29,6 +29,13 @@ private:
 		glm::vec3(1.5f,  0.2f, -1.5f),
 		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
+
+	glm::vec3 m_PointLightPositions[4] = {
+		glm::vec3(0.7f, 0.2f, 2.0f),
+		glm::vec3(2.3f, -3.3f, -4.0f),
+		glm::vec3(-4.0f, 2.0f, -12.0f),
+		glm::vec3(0.0f, 0.0f, -3.0f),
+	};
 	
 	float m_CutOff;
 private:
@@ -59,9 +66,9 @@ private:
 		glm::vec3 specular;
 
 		DirectLight(const glm::vec3& direction = glm::vec3(-0.2f, -1.0f, -0.3f),
-			const glm::vec3& ambient  = glm::vec3(0.2f), 
-			const glm::vec3& diffuse  = glm::vec3(0.3f), 
-			const glm::vec3& specluar = glm::vec3(0.6f))
+			const glm::vec3& ambient  = glm::vec3(0.1f), 
+			const glm::vec3& diffuse  = glm::vec3(0.1f), 
+			const glm::vec3& specluar = glm::vec3(0.2f))
 			: direction(direction),
 			  ambient(ambient),
 			  diffuse(diffuse),
@@ -73,6 +80,7 @@ private:
 
 	struct SpotLight
 	{
+		glm::vec3 position;
 		glm::vec3 direction;
 		glm::vec3 ambient;
 		glm::vec3 diffuse;
@@ -85,16 +93,18 @@ private:
 		float cutoff;
 		float outerCutoff;
 
-		SpotLight(const glm::vec3& direction = glm::vec3(-0.2f, -1.0f, -0.3f),
+		SpotLight(const glm::vec3& position = glm::vec3(0, 0, 6),
+			const glm::vec3& direction = glm::vec3(0, 0, -1),
 			const glm::vec3& ambient  = glm::vec3(0.0f), 
-			const glm::vec3& diffuse  = glm::vec3(0.5f), 
-			const glm::vec3& specluar = glm::vec3(1.0f),
+			const glm::vec3& diffuse  = glm::vec3(0.1f), 
+			const glm::vec3& specluar = glm::vec3(0.6f),
 			float constant = 1,
 			float linear = 0.09f,
 			float quadratic = 0.032f,
 			float cutoff = 12.5f,
 			float outerCutoff = 15.0f)
-			: direction(direction),
+			: position(position),
+			  direction(direction),
 			  ambient(ambient),
 			  diffuse(diffuse),
 			  specular(specluar),
@@ -108,8 +118,42 @@ private:
 
 	};
 
+	struct PointLight
+	{
+		glm::vec3 position;
+
+		float constant;
+		float linear;
+		float quadratic;
+	
+		glm::vec3 ambient;
+		glm::vec3 diffuse;
+		glm::vec3 specular;
+
+		PointLight(const glm::vec3& position = glm::vec3(0, 0, 6),
+			float constant = 1,
+			float linear = 0.09f,
+			float quadratic = 0.032f,
+			const glm::vec3& ambient  = glm::vec3(0.0f), 
+			const glm::vec3& diffuse  = glm::vec3(0.1f), 
+			const glm::vec3& specluar = glm::vec3(0.6f))
+			: position(position),
+			  constant(constant),
+			  linear(linear),
+			  quadratic(quadratic),
+			  ambient(ambient),
+			  diffuse(diffuse),
+			  specular(specluar)
+		{
+		}
+
+	};
+
 
 	Engine::Ref<Material> m_Material; 
 	Engine::Ref<DirectLight> m_DirectLight; 
 	Engine::Ref<SpotLight> m_SpotLight; 
+	Engine::Ref<PointLight> m_PointLight;
+
+	glm::vec3 m_PointLightColor;
 };
