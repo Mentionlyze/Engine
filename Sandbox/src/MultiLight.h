@@ -15,6 +15,7 @@ private:
 	Engine::Ref<Engine::Shader> m_Shader;
 	Engine::Ref<Engine::VertexArray> m_VertexArray;
 	Engine::Ref<Engine::Texture2D> m_Texture;
+	Engine::Ref<Engine::Texture2D> m_SpecTexture;
 	Engine::PerspectiveCameraController m_CameraController;
 
 	glm::vec3 m_CubePositions[10] = {
@@ -66,9 +67,9 @@ private:
 		glm::vec3 specular;
 
 		DirectLight(const glm::vec3& direction = glm::vec3(-0.2f, -1.0f, -0.3f),
-			const glm::vec3& ambient  = glm::vec3(0.1f), 
-			const glm::vec3& diffuse  = glm::vec3(0.1f), 
-			const glm::vec3& specluar = glm::vec3(0.2f))
+			const glm::vec3& ambient  = glm::vec3(0.05f), 
+			const glm::vec3& diffuse  = glm::vec3(0.4f), 
+			const glm::vec3& specluar = glm::vec3(0.5f))
 			: direction(direction),
 			  ambient(ambient),
 			  diffuse(diffuse),
@@ -97,7 +98,7 @@ private:
 			const glm::vec3& direction = glm::vec3(0, 0, -1),
 			const glm::vec3& ambient  = glm::vec3(0.0f), 
 			const glm::vec3& diffuse  = glm::vec3(0.1f), 
-			const glm::vec3& specluar = glm::vec3(0.6f),
+			const glm::vec3& specluar = glm::vec3(1.0f),
 			float constant = 1,
 			float linear = 0.09f,
 			float quadratic = 0.032f,
@@ -134,9 +135,9 @@ private:
 			float constant = 1,
 			float linear = 0.09f,
 			float quadratic = 0.032f,
-			const glm::vec3& ambient  = glm::vec3(0.0f), 
-			const glm::vec3& diffuse  = glm::vec3(0.1f), 
-			const glm::vec3& specluar = glm::vec3(0.6f))
+			const glm::vec3& ambient  = glm::vec3(0.05f), 
+			const glm::vec3& diffuse  = glm::vec3(0.8f), 
+			const glm::vec3& specluar = glm::vec3(1.0f))
 			: position(position),
 			  constant(constant),
 			  linear(linear),
