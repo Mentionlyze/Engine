@@ -133,7 +133,6 @@ void MuitLightLayer::OnUpdate(Engine::Timestep ts)
     m_SpecTexture->Bind(1);
     m_Shader->Bind();
 
-
     m_DirectLight->ambient = m_DirectLight->specular * 0.1f;
     m_DirectLight->diffuse= m_DirectLight->specular * 0.8f;
 
@@ -159,7 +158,6 @@ void MuitLightLayer::OnUpdate(Engine::Timestep ts)
     std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_SpotLight.cutoff", glm::cos(glm::radians(m_SpotLight->cutoff)));
     std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_SpotLight.outerCutoff", glm::cos(glm::radians(m_SpotLight->outerCutoff)));
 
-   
     for (uint32_t i = 0; i < 10; i++)
     {
         glm::mat4 transform = glm::mat4(1.0f);
@@ -168,7 +166,6 @@ void MuitLightLayer::OnUpdate(Engine::Timestep ts)
         transform = glm::rotate(transform, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
         Engine::Renderer::Submit(m_VertexArray, m_Shader, transform);
     }
-
    
     Engine::Renderer::EndScene();
 }
