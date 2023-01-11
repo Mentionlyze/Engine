@@ -67,7 +67,7 @@ namespace Engine
 
 	bool PerspectiveCameraController::OnMouseScrolled(MouseScrolledEvent& e)
 	{
-		m_CameraPosition.z -= (float)e.GetYOffset() * 0.25f;
+		m_CameraPosition += (float)e.GetYOffset() * 0.25f * m_Camera.GetForwardDirection();
 		m_Camera.SetPosition(m_CameraPosition);
 		return false;
 	}

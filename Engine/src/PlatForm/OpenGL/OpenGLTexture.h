@@ -16,6 +16,8 @@ namespace Engine
 		virtual void Bind(uint32_t slot = 0) const override;
 		virtual void Unbind() const override;
 
+		uint32_t const GetRendererId() const { return m_RendererID; }
+
 	private:
 		uint32_t m_RendererID;
 		uint32_t m_Width, m_Height;

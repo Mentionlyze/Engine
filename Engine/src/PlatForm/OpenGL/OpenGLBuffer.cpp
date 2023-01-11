@@ -5,7 +5,7 @@
 
 namespace Engine
 {
-	OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size)
+	OpenGLVertexBuffer::OpenGLVertexBuffer(const void *vertices, uint32_t size)
 	{
 		glCreateBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
@@ -29,7 +29,7 @@ namespace Engine
 
 
 
-	OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices , uint32_t count) : m_Count(count)
+	OpenGLIndexBuffer::OpenGLIndexBuffer(const void *indices , uint32_t count) : m_Count(count)
 	{
 		glCreateBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
