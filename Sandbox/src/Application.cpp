@@ -4,13 +4,14 @@
 #include "ExampleLayer.h"
 #include "Sandbox3D.h"
 #include "MultiLight.h"
+#include "ModelLoad.h"
 
 class SandBox : public Engine::Application
 {
 public:
 	SandBox()
 	{
-		PushLayer(new MuitLightLayer());
+		PushLayer(new ModelLoad());
 	}
 	~SandBox()
 	{

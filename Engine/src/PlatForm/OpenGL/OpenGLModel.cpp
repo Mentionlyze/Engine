@@ -23,6 +23,12 @@ namespace Engine
 		
 		// process Assimp's root node recursively
 		ProcessNode(scene->mRootNode, scene);
+
+		auto lastSlash = path.find_last_of("/\\");
+		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
+		auto lastDot = path.rfind(".");
+		auto count = lastDot == std::string::npos ? path.size() - lastSlash : lastDot - lastSlash;
+		m_Name = path.substr(lastSlash, count);
 	}
 
 	OpenGLModel::~OpenGLModel()

@@ -7,6 +7,7 @@ namespace Engine
 {
 	Renderer::SceneData* Renderer::s_SceneData = new Renderer::SceneData;
 	Ref<ShaderLibrary> Renderer::s_ShaderLibrary = CreateRef<ShaderLibrary>();
+	Ref<ModelLibrary> Renderer::s_ModelLibrary = CreateRef<ModelLibrary>();
 
 	void Renderer::Init()
 	{

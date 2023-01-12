@@ -6,6 +6,7 @@
 #include "RenderCommand.h"
 #include "Engine/Renderer/Shader.h"
 #include "Engine/Renderer/Camera.h"
+#include "Engine/Renderer/Model.h"
 
 namespace Engine
 {
@@ -18,6 +19,7 @@ namespace Engine
 		static void EndScene();
 		static void Submit(const Ref<VertexArray>& vertexArray, const Ref<Shader>& shader, const glm::mat4& transform);
 		static Ref<ShaderLibrary> GetShaderLibrary() { return s_ShaderLibrary; }
+		static Ref<ModelLibrary> GetModelLibrary() { return s_ModelLibrary; }
 
 	private:
 		struct SceneData
@@ -29,5 +31,6 @@ namespace Engine
 
 		static SceneData* s_SceneData;
 		static Ref<ShaderLibrary> s_ShaderLibrary;
+		static Ref<ModelLibrary> s_ModelLibrary;
 	};
 }

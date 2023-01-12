@@ -19,7 +19,12 @@ namespace Engine
 		OpenGLModel(const std::string& path, bool gamma);
 		~OpenGLModel();
 
+		const std::string GetName() const override { return m_Name; }
+
 		void Submit(const Ref<Shader>& shader, const glm::mat4& transform) const override;
+
+	private:
+		std::string m_Name;
 
 	private:
 		void ProcessNode(aiNode* node, const aiScene* scene);

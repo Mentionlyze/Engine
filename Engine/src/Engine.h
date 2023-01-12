@@ -27,10 +27,14 @@
 #include "Engine/Renderer/VertexArray.h"
 #include "Engine/Renderer/Shader.h"
 #include "Engine/Renderer/Texture.h"
+#include "Engine/Renderer/Mesh.h"
+#include "Engine/Renderer/Model.h"
 
 #include "PlatForm/OpenGL/OrthoGraphicCameraController.h"
 #include "PlatForm/OpenGL/PerspectiveCameraController.h"
 #include "PlatForm/OpenGL/OpenGLShader.h"
+#include "PlatForm/OpenGL/OpenGLMesh.h"
+#include "PlatForm/OpenGL/OpenGLModel.h"
 
 #include "Engine/ImGui/ImGuiLayer.h"
 
