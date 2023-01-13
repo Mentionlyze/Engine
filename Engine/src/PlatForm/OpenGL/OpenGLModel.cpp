@@ -16,7 +16,7 @@ namespace Engine
 			aiProcess_FlipUVs |
 			aiProcess_CalcTangentSpace);
 
-		ENGINE_CORE_ASSERT(scene && !scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE && scene->mRootNode, importer.GetErrorString());
+		ENGINE_CORE_ASSERT(scene && !(scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) && scene->mRootNode, importer.GetErrorString());
 
 		// retrieve the directory path of the filepath
 		m_Directory = path.substr(0, path.find_last_of("/"));
