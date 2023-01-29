@@ -29,6 +29,11 @@ namespace Engine
 			internalFormat = GL_RGBA8;
 			dataFormat = GL_RGB;
 		}
+		else if (channels == 1)
+		{
+			internalFormat = GL_RED;
+			dataFormat = GL_RED;
+		}
 	
 		ENGINE_CORE_INFO(internalFormat & dataFormat);
 		ENGINE_CORE_ASSERT(internalFormat && dataFormat, "Format not suported!");

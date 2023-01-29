@@ -14,6 +14,7 @@ private:
 	Engine::Ref<Engine::Shader> m_Shader;
 	Engine::Ref<Engine::VertexArray> m_VertexArray;
 	Engine::Ref<Engine::Texture2D> m_Texture;
+	Engine::Ref<Engine::Texture2D> m_SpecularTexture;
 	Engine::PerspectiveCameraController m_CameraController;
 	glm::vec3 m_LightPos;
 	glm::vec3 m_LightColor;

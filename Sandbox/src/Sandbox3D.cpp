@@ -67,11 +67,12 @@ Sandbox3D::Sandbox3D() : Layer("Sandbox3D"),
     m_VertexArray->SetIndexBuffer(indexBuffer);
 
     m_Shader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/Geometry.vert", "assets/shaders/Geometry.frag");
-	m_Texture = Engine::Texture2D::Create("assets/textures/CheckerBoard.png");
+	m_Texture = Engine::Texture2D::Create("assets/textures/container2.png");
+	m_SpecularTexture = Engine::Texture2D::Create("assets/textures/container2_specular.png");
 
     m_Shader->Bind();
     std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetInt("u_Material.diffuse", 0);
-    std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetInt("u_Material.specular", 0);
+    std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetInt("u_Material.specular", 1);
 
 
     auto lightShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/LightCube.vert", "assets/shaders/LightCube.frag");
@@ -95,6 +96,7 @@ void Sandbox3D::OnUpdate(Engine::Timestep ts)
     Engine::Renderer::Submit(m_VertexArray, lightShader, lightTransform);
 
     m_Texture->Bind();
+    m_SpecularTexture->Bind(1);
     m_Shader->Bind();
 
     glm::mat4 viewMatrix = m_CameraController.GetCamera().GetViewMatrix();

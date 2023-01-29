@@ -53,6 +53,11 @@ namespace Engine
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 			m_Meshes.push_back(ProcessMesh(mesh, scene));
 		}
+
+		for (uint32_t i = 0; i < node->mNumChildren; i++)
+		{
+			ProcessNode(node->mChildren[i], scene);
+		}
 	}
 
 	Ref<Mesh> OpenGLModel::ProcessMesh(aiMesh* mesh, const aiScene* scene)
@@ -154,6 +159,7 @@ namespace Engine
 				modelTexture.Id = std::dynamic_pointer_cast<OpenGLTexture2D>(texture)->GetRendererId();
 				modelTexture.Type = typeName;
 				modelTexture.Path = str.C_Str();
+				modelTexture.Texture = texture;
 				modelTextures.push_back(modelTexture);
 				m_Textures.push_back(modelTexture);
 			}

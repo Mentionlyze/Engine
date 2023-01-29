@@ -12,6 +12,16 @@ namespace Engine
 		m_VertexArray = VertexArray::Create();
 		m_VertexBuffer = VertexBuffer::Create(&m_Vertices[0], m_Vertices.size() * sizeof(Vertex));
 		m_IndexBuffer = IndexBuffer::Create(&m_Indices[0], m_Indices.size());
+
+		BufferLayout layout = {
+			{ ShaderDataType::Float3, "a_Pos" }, 
+			{ ShaderDataType::Float3, "a_Normal" },
+			{ ShaderDataType::Float2, "a_TexCoord"}
+		};
+
+		m_VertexBuffer->SetLayout(layout);
+		m_VertexArray->AddVertexBuffer(m_VertexBuffer);
+		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 	}
 
 	OpenGLMesh::~OpenGLMesh()
@@ -19,7 +29,7 @@ namespace Engine
 
 	}
 
-	void OpenGLMesh::Submit(const Ref<Shader>& shader, const glm::mat4& transform) const
+	void OpenGLMesh::Submit(const Ref<Shader>& shader, const glm::mat4& transform) const 
 	{
 		// bind appropriate textures
 		uint32_t diffuseNr  = 1;
@@ -29,8 +39,6 @@ namespace Engine
 
 		for (uint32_t i = 0; i < m_Textures.size(); i++)
 		{
-			glActiveTexture(GL_TEXTURE0 + i);
-
 			std::string number;
 			std::string name = m_Textures[i].Type;
 
@@ -44,7 +52,7 @@ namespace Engine
 				number = std::to_string(heightNr++);
 
 			std::dynamic_pointer_cast<OpenGLShader>(shader)->SetInt((name + number), i);
-			glBindTexture(GL_TEXTURE_2D, m_Textures[i].Id);
+			m_Textures[i].Texture->Bind(i);
 		}
 
 		Renderer::Submit(m_VertexArray, shader, transform);

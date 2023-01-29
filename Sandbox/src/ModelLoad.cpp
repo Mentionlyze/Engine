@@ -1,9 +1,10 @@
 #include "ModelLoad.h"
+#include "glm/gtc/matrix_transform.hpp"
 
-ModelLoad::ModelLoad() : m_CameraController(45.0f, 1.6f /0.9f, 0.1f, 100.f)
+ModelLoad::ModelLoad() : m_CameraController(45.0f, 1.6f/0.9f, 0.1f, 100.0f)
 {
 	m_Shader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/ModelLoad.vert", "assets/shaders/ModelLoad.frag");
-	m_Model = Engine::Renderer::GetModelLibrary()->Load("assets/objects/cyborg/cyborg.obj");
+	m_Model = Engine::Renderer::GetModelLibrary()->Load("assets/objects/backpack/backpack.obj");
 }
 
 void ModelLoad::OnUpdate(Engine::Timestep ts)
