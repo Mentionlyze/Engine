@@ -124,7 +124,8 @@ project "Sandbox"
 		"Engine/src",
 		"Engine/vendor",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.assimp}"
+		"%{IncludeDir.assimp}",
+		"%{IncludeDir.Glad}"
 	}
 
 	links

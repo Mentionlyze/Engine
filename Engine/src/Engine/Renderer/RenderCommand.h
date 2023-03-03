@@ -23,9 +23,9 @@ namespace Engine
 			s_RendererAPI->SetClearColor(color);
 		}
 
-		inline static void Clear(bool depth = false)
+		inline static void Clear()
 		{
-			s_RendererAPI->Clear(depth);
+			s_RendererAPI->Clear();
 		}
 
 		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray)

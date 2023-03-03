@@ -89,7 +89,7 @@ void MuitLightLayer::OnUpdate(Engine::Timestep ts)
     m_CameraController.OnUpdate(ts);
 
     Engine::RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1 });
-    Engine::RenderCommand::Clear(true);
+    Engine::RenderCommand::Clear();
 
     glm::mat4 viewMatrix = m_CameraController.GetCamera().GetViewMatrix();
     glm::vec3 viewPosition = m_CameraController.GetCamera().GetPosition();

@@ -66,6 +66,7 @@ Sandbox3D::Sandbox3D() : Layer("Sandbox3D"),
     auto indexBuffer = Engine::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
     m_VertexArray->SetIndexBuffer(indexBuffer);
 
+
     m_Shader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/Geometry.vert", "assets/shaders/Geometry.frag");
 	m_Texture = Engine::Texture2D::Create("assets/textures/container2.png");
 	m_SpecularTexture = Engine::Texture2D::Create("assets/textures/container2_specular.png");
@@ -84,7 +85,7 @@ void Sandbox3D::OnUpdate(Engine::Timestep ts)
     m_CameraController.OnUpdate(ts);
 
 	Engine::RenderCommand::SetClearColor({ 0.0f, 0.0f, 0.0f, 1 });
-	Engine::RenderCommand::Clear(true);
+	Engine::RenderCommand::Clear();
 
     Engine::Renderer::BeginScene(m_CameraController.GetCamera());
     auto lightShader = Engine::Renderer::GetShaderLibrary()->Get("LightCube");
