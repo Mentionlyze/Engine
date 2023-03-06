@@ -17,7 +17,7 @@ namespace Engine
 		static void OnWindowResize(uint32_t width, uint32_t height);
 		static void BeginScene(Camera& camera);
 		static void EndScene();
-		static void Submit(const Ref<VertexArray>& vertexArray, const Ref<Shader>& shader, const glm::mat4& transform);
+		static void Submit(const Ref<VertexArray>& vertexArray, const Ref<Shader>& shader, const glm::mat4& transform, bool skybox = false);
 		static Ref<ShaderLibrary> GetShaderLibrary() { return s_ShaderLibrary; }
 		static Ref<ModelLibrary> GetModelLibrary() { return s_ModelLibrary; }
 
@@ -25,6 +25,7 @@ namespace Engine
 		struct SceneData
 		{
 			glm::mat4 ViewProjectionMatrix;
+			glm::mat4 ProjectionMatrix;
 			glm::mat4 ViewMatrix;
 			glm::vec3 CameraPosition;
 		};

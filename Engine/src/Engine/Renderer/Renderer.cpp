@@ -22,6 +22,7 @@ namespace Engine
 	void Renderer::BeginScene(Camera& camera)
 	{
 		s_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
+		s_SceneData->ProjectionMatrix = camera.GetProjectionMatrix();
 		s_SceneData->ViewMatrix = camera.GetViewMatrix();
 		s_SceneData->CameraPosition = camera.GetPosition();
 	}
@@ -31,11 +32,21 @@ namespace Engine
 
 	}
 
-	void Renderer::Submit(const Ref<VertexArray>& vertexArray, const Ref<Shader>& shader, const glm::mat4& transform)
+	void Renderer::Submit(const Ref<VertexArray>& vertexArray, const Ref<Shader>& shader, const glm::mat4& transform, bool skybox)
 	{
 		shader->Bind();
 
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
+		if (skybox) 
+		{
+			glm::mat4 projectiMatrix = s_SceneData->ProjectionMatrix;
+			glm::mat4 viewMatrix = glm::mat4(glm::mat3(s_SceneData->ViewMatrix));
+
+			std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_ViewProjection", projectiMatrix * viewMatrix);
+		}
+		else 
+		{
+			std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
+		}
 		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_View", s_SceneData->ViewMatrix);
 		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_Transform", transform);
 		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateFloat3("u_ViewPosition", s_SceneData->CameraPosition);

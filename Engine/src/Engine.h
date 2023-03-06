@@ -35,6 +35,7 @@
 #include "PlatForm/OpenGL/OpenGLShader.h"
 #include "PlatForm/OpenGL/OpenGLMesh.h"
 #include "PlatForm/OpenGL/OpenGLModel.h"
+#include "PlatForm/OpenGL/OpenGLCubeMap.h"
 
 #include "Engine/ImGui/ImGuiLayer.h"
 

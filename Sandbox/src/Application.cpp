@@ -6,13 +6,14 @@
 #include "MultiLight.h"
 #include "ModelLoad.h"
 #include "DepthStencil.h"
+#include "Skybox.h"
 
 class SandBox : public Engine::Application
 {
 public:
 	SandBox()
 	{
-		PushLayer(new DepthStencil());
+		PushLayer(new Skybox());
 	}
 	~SandBox()
 	{
