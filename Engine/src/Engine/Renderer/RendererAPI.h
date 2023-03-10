@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include "VertexArray.h"
+#include <glad/glad.h>
 
 namespace Engine
 {
@@ -23,6 +24,7 @@ namespace Engine
 		virtual void Clear() = 0;
 
 		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) = 0;
+		virtual void DrawElementInstanced(GLenum mode, uint32_t count, uint32_t amount) = 0;
 
 	private:
 		static API s_API;

@@ -58,7 +58,7 @@ Skybox::Skybox() : Layer("Skybox"),
     auto skyboxIndexBuffer = Engine::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
     m_SkyboxVertexArray->SetIndexBuffer(skyboxIndexBuffer);
 
-    m_SkyboxShader = Engine::Shader::Create("assets/shaders/Skybox.vert", "assets/shaders/Skybox.frag");
+    m_SkyboxShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/Skybox.vert", "assets/shaders/Skybox.frag");
     std::dynamic_pointer_cast<Engine::OpenGLShader>(m_SkyboxShader)->SetInt("skybox", 0);
 
     std::vector<std::string> faces = {
@@ -118,7 +118,7 @@ Skybox::Skybox() : Layer("Skybox"),
     auto cubeIndexBuffer = Engine::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
     m_CubeVertexArray->SetIndexBuffer(cubeIndexBuffer);
 
-    m_CubeShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/Geometry.vert", "assets/shaders/DepthStencil.frag");
+    m_CubeShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/SkyCube.vert", "assets/shaders/SkyCube.frag");
     m_CubeTexture = Engine::Texture2D::Create("assets/textures/container2.png");
 }
 
@@ -134,7 +134,7 @@ void Skybox::OnUpdate(Engine::Timestep ts)
     glm::mat4 transform = glm::mat4(1.0f);
 
     m_CubeShader->Bind();
-    m_CubeTexture->Bind();
+    m_SkyboxMap->Bind();
     Engine::Renderer::Submit(m_CubeVertexArray, m_CubeShader, transform);
 
     glDepthFunc(GL_LEQUAL);

@@ -4,7 +4,8 @@
 ModelLoad::ModelLoad() : m_CameraController(45.0f, 1.6f/0.9f, 0.1f, 100.0f)
 {
 	m_Shader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/ModelLoad.vert", "assets/shaders/ModelLoad.frag");
-	m_Model = Engine::Renderer::GetModelLibrary()->Load("assets/objects/backpack/backpack.obj");
+	m_VisualShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/Visualization.vert", "assets/shaders/Visualization.frag", "assets/shaders/Visualization.geom");
+	m_Model = Engine::Renderer::GetModelLibrary()->Load("assets/objects/nanosuit/nanosuit.obj");
 }
 
 void ModelLoad::OnUpdate(Engine::Timestep ts)
@@ -17,6 +18,7 @@ void ModelLoad::OnUpdate(Engine::Timestep ts)
 	Engine::Renderer::BeginScene(m_CameraController.GetCamera());
 
 	m_Model->Submit(m_Shader, glm::mat4(1.0f));
+	m_Model->Submit(m_VisualShader, glm::mat4(1.0f));
 
 	Engine::Renderer::EndScene();
 }

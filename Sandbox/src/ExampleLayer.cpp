@@ -64,7 +64,7 @@ ExampleLayer::ExampleLayer() : Layer("Example"), m_CameraController(1.6f / 0.9f,
 		)";
 
 
-	auto textureShader = Engine::Renderer::GetShaderLibrary()->Load("texture_shader", vertexSrc, fragmentSrc);
+	auto textureShader = Engine::Renderer::GetShaderLibrary()->Load("texture_shader", vertexSrc, fragmentSrc, nullptr);
 	textureShader->Bind();
 
 	m_Texture = Engine::Texture2D::Create("assets/textures/Checkerboard.png");
@@ -72,7 +72,7 @@ ExampleLayer::ExampleLayer() : Layer("Example"), m_CameraController(1.6f / 0.9f,
 
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(textureShader)->SetInt("u_Texture", 0);
 
-	m_QubeShader = Engine::Shader::Create("assets/shaders/Qube.vert", "assets/shaders/Qube.frag");
+	m_QubeShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/Qube.vert", "assets/shaders/Qube.frag");
 }
 
 void ExampleLayer::OnUpdate(Engine::Timestep ts)

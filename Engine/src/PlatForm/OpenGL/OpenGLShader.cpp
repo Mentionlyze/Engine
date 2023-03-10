@@ -29,12 +29,13 @@ namespace Engine
 	}
 
 
-	OpenGLShader::OpenGLShader(const std::string& vertexSrcPath, const std::string& fragmentSrcPath)
+	OpenGLShader::OpenGLShader(const std::string& vertexSrcPath, const std::string& fragmentSrcPath, const std::string& geometrySrcPath)
 	{
 		std::string vertextShaderSource  = ReadFile(vertexSrcPath);
 		std::string fragmentShaderSource = ReadFile(fragmentSrcPath);
+		std::string geometryShaderSource = ReadFile(geometrySrcPath);
 
-		std::unordered_map<GLenum, std::string> shaderSources = Preprocess(vertextShaderSource, fragmentShaderSource);
+		std::unordered_map<GLenum, std::string> shaderSources = Preprocess(vertextShaderSource, fragmentShaderSource, geometryShaderSource);
 		Compile(shaderSources);
 
 		auto lastSlash = vertexSrcPath.find_last_of("/\\");
@@ -44,9 +45,9 @@ namespace Engine
 		m_Name = vertexSrcPath.substr(lastSlash, count);
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource): m_Name(name)
+	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource, const std::string& geometrySource): m_Name(name)
 	{
-		std::unordered_map<GLenum, std::string> shaderSources = Preprocess(vertexSource, fragmentSource);
+		std::unordered_map<GLenum, std::string> shaderSources = Preprocess(vertexSource, fragmentSource, geometrySource);
 		Compile(shaderSources);
 	}
 
@@ -58,6 +59,9 @@ namespace Engine
 
 	std::string OpenGLShader::ReadFile(const std::string& filePath)
 	{
+		if (filePath.empty())
+			return {};
+
 		std::string result;
 		std::ifstream in(filePath, std::ios::in | std::ios::binary);
 
@@ -77,12 +81,14 @@ namespace Engine
 	}
 
 
-	std::unordered_map<GLenum, std::string> OpenGLShader::Preprocess(const std::string& vertexSource, const std::string& fragmentSource)
+	std::unordered_map<GLenum, std::string> OpenGLShader::Preprocess(const std::string& vertexSource, const std::string& fragmentSource, const std::string& geometrySource)
 	{
 		std::unordered_map<GLenum, std::string> shaderSources;
 
 		shaderSources[GL_VERTEX_SHADER] = vertexSource;
 		shaderSources[GL_FRAGMENT_SHADER] = fragmentSource;
+		if (!geometrySource.empty())
+			shaderSources[GL_GEOMETRY_SHADER] = geometrySource;
 
 		return shaderSources;
 	}
@@ -90,8 +96,8 @@ namespace Engine
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string> shaderSources)
 	{
 		GLuint program= glCreateProgram();
-		ENGINE_CORE_ASSERT(shaderSources.size() == 2, "We only suppot 2 shaders for now");
-		std::array<GLenum, 2> glShaderIds;
+		ENGINE_CORE_ASSERT(shaderSources.size() == 2 || shaderSources.size() == 3, "We only suppot 2 or 3 shaders for now");
+		std::array<GLenum, 3> glShaderIds;
 		int glShaderIdIndex = 0;
 		for (auto& kv : shaderSources)
 		{

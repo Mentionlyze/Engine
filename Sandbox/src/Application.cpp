@@ -7,13 +7,14 @@
 #include "ModelLoad.h"
 #include "DepthStencil.h"
 #include "Skybox.h"
+#include "Planet.h"
 
 class SandBox : public Engine::Application
 {
 public:
 	SandBox()
 	{
-		PushLayer(new Skybox());
+		PushLayer(new Planet());
 	}
 	~SandBox()
 	{

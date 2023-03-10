@@ -11,8 +11,8 @@ namespace Engine
 	class OpenGLShader : public Shader
 	{
 	public:
-		OpenGLShader(const std::string& vertexSrcPath, const std::string& fragmentSrcPath);
-		OpenGLShader(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource);
+		OpenGLShader(const std::string& vertexSrcPath, const std::string& fragmentSrcPath, const std::string& geometrySrcPath);
+		OpenGLShader(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource, const std::string& geometrySource);
 		virtual ~OpenGLShader();
 
 		virtual void Bind() const override;
@@ -32,7 +32,7 @@ namespace Engine
 	private:
 		//CompileShader
 		std::string ReadFile(const std::string& sourcePath);
-		std::unordered_map<GLenum, std::string> Preprocess(const std::string& vertexSource, const std::string& fragmentSource);
+		std::unordered_map<GLenum, std::string> Preprocess(const std::string& vertexSource, const std::string& fragmentSource, const std::string& geometryShaderSource);
 		void Compile(const std::unordered_map<GLenum, std::string> shaderSources);
 	private:
 		uint32_t m_RendererID = 0;

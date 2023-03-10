@@ -2,6 +2,7 @@
 #include "Renderer.h"
 #include "PlatForm/OpenGL/OpenGLShader.h"
 #include <glm/gtc/type_ptr.hpp>
+#include <glad/glad.h>
 
 namespace Engine
 {
@@ -47,11 +48,27 @@ namespace Engine
 		{
 			std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
 		}
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_Projection", s_SceneData->ProjectionMatrix);
 		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_View", s_SceneData->ViewMatrix);
 		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_Transform", transform);
 		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateFloat3("u_ViewPosition", s_SceneData->CameraPosition);
 
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);
+	}
+
+	void Renderer::SubmitInstanced(uint32_t rendererId, GLenum mode, uint32_t count, uint32_t amount, const Ref<Shader>& shader, const glm::mat4& transform)
+	{
+		shader->Bind();
+
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_Projection", s_SceneData->ProjectionMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_View", s_SceneData->ViewMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_Transform", transform);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateFloat3("u_ViewPosition", s_SceneData->CameraPosition);
+
+		glBindVertexArray(rendererId);
+		RenderCommand::DrawElementInstanced(mode, count, amount);
+		glBindVertexArray(0);
 	}
 }
