@@ -24,6 +24,11 @@ namespace Engine
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 	}
 
+	OpenGLMesh::OpenGLMesh(const Ref<Geometry> geometry, const std::vector<ModelTexture>& textures) : m_Geometry(geometry) , m_Textures(textures)
+	{
+
+	}
+
 	OpenGLMesh::~OpenGLMesh()
 	{
 
@@ -56,6 +61,19 @@ namespace Engine
 		}
 
 		Renderer::Submit(m_VertexArray, shader, transform);
+		glActiveTexture(GL_TEXTURE0);
+	}
+
+	void OpenGLMesh::Submit(const Ref<Shader>& shader) const
+	{
+		for (uint32_t i = 0; i < m_Textures.size(); i++)
+		{
+			std::string name = m_Textures[i].Type;
+			std::dynamic_pointer_cast<OpenGLShader>(shader)->SetInt(name, i);
+			m_Textures[i].Texture->Bind(i);
+		}
+
+		Renderer::Submit(m_Geometry->GetVertextArray(), shader, m_Geometry->GetTransform());
 		glActiveTexture(GL_TEXTURE0);
 	}
 }

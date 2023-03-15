@@ -18,6 +18,8 @@ namespace Engine
 		virtual std::vector<Ref<VertexBuffer>> GetVertexBuffers() const override { return m_VertexBuffers; };
 		virtual Ref<IndexBuffer> GetIndexBuffer() const override { return m_IndexBuffer; };
 
+		uint32_t GetRendererID() { return m_RendererID; };
+
 	private:
 		uint32_t m_RendererID;
 		std::vector<Ref<VertexBuffer>> m_VertexBuffers;

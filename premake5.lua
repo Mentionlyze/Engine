@@ -125,6 +125,7 @@ project "Sandbox"
 		"Engine/vendor",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.assimp}",
+		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}"
 	}
 

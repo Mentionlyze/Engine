@@ -21,7 +21,6 @@ namespace Engine
 		static void SubmitInstanced(uint32_t rendererId, GLenum mode, uint32_t count, uint32_t amount, const Ref<Shader>& shader, const glm::mat4& transform);
 		static Ref<ShaderLibrary> GetShaderLibrary() { return s_ShaderLibrary; }
 		static Ref<ModelLibrary> GetModelLibrary() { return s_ModelLibrary; }
-		static GetRendererTime() { return  }
 
 	private:
 		struct SceneData

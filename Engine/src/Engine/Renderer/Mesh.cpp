@@ -8,4 +8,8 @@ namespace Engine
 	{
 		return CreateRef<OpenGLMesh>(vertices, indices, textures);
 	}
+	Ref<Mesh> Mesh::Create(const Ref<Geometry> geometry, const std::vector<ModelTexture>& textures)
+	{
+		return CreateRef<OpenGLMesh>(geometry, textures);
+	}
 }

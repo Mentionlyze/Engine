@@ -15,7 +15,7 @@ private:
 	Engine::Ref<Engine::Model> m_Model;
 	Engine::PerspectiveCameraController m_CameraController;
 
-	uint32_t amount;
+	uint32_t amount = 10000;
 	glm::mat4* m_ModelMatrixs = new glm::mat4[amount];
 };
 

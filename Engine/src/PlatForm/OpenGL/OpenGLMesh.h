@@ -14,15 +14,19 @@ namespace Engine
 
 	public:
 		OpenGLMesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::vector<ModelTexture>& textures);
+		OpenGLMesh(const Ref<Geometry> geometry, const std::vector<ModelTexture>& textures);
 		~OpenGLMesh();
 
 		Ref<VertexArray> GetVertexArray() { return m_VertexArray; };
 
 		void Submit(const Ref<Shader>& shader, const glm::mat4& transform) const override;
+		void Submit(const Ref<Shader>& shader) const override;
 
 	private:
 		Ref<VertexArray> m_VertexArray;
 		Ref<VertexBuffer> m_VertexBuffer;
 		Ref<IndexBuffer> m_IndexBuffer;
+
+		Ref<Geometry> m_Geometry;
 	};
 }
