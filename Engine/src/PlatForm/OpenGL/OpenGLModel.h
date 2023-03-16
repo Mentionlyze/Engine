@@ -12,7 +12,7 @@ namespace Engine
 	{
 	public:
 		std::vector<Ref<Mesh>> m_Meshes;
-		std::vector<ModelTexture> m_Textures;
+		std::vector<MaterialTexture> m_Textures;
 		std::string m_Directory;
 		bool m_GammaCorrection;
 	public:
@@ -31,7 +31,7 @@ namespace Engine
 
 		Ref<Mesh> ProcessMesh(aiMesh* mesh, const aiScene* scene);
 
-		std::vector<ModelTexture> LoadMateriaTextures(aiMaterial* material, aiTextureType type, std::string typeName);
+		std::vector<MaterialTexture> LoadMateriaTextures(aiMaterial* material, aiTextureType type, std::string typeName);
 	};
 }
 

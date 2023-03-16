@@ -29,6 +29,7 @@
 #include "Engine/Renderer/Texture.h"
 #include "Engine/Renderer/Mesh.h"
 #include "Engine/Renderer/Model.h"
+#include "Engine/Renderer/ModelTexture.h"
 
 #include "PlatForm/OpenGL/OrthoGraphicCameraController.h"
 #include "PlatForm/OpenGL/PerspectiveCameraController.h"
@@ -36,6 +37,7 @@
 #include "PlatForm/OpenGL/OpenGLMesh.h"
 #include "PlatForm/OpenGL/OpenGLModel.h"
 #include "PlatForm/OpenGL/OpenGLCubeMap.h"
+#include "PlatForm/OpenGL/OpenGLModelTexture.h"
 
 #include "Engine/ImGui/ImGuiLayer.h"
 

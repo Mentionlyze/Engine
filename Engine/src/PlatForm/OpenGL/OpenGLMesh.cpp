@@ -6,7 +6,7 @@
 
 namespace Engine
 {
-	OpenGLMesh::OpenGLMesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::vector<ModelTexture>& textures)
+	OpenGLMesh::OpenGLMesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::vector<MaterialTexture>& textures)
 		: m_Vertices(vertices), m_Indices(indices), m_Textures(textures)
 	{
 		m_VertexArray = VertexArray::Create();
@@ -24,7 +24,7 @@ namespace Engine
 		m_VertexArray->SetIndexBuffer(m_IndexBuffer);
 	}
 
-	OpenGLMesh::OpenGLMesh(const Ref<Geometry> geometry, const std::vector<ModelTexture>& textures) : m_Geometry(geometry) , m_Textures(textures)
+	OpenGLMesh::OpenGLMesh(const Ref<Geometry>& geometry, const std::vector<MaterialTexture>& textures) : m_Geometry(geometry) , m_Textures(textures)
 	{
 
 	}

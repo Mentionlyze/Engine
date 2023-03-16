@@ -8,13 +8,14 @@
 #include "DepthStencil.h"
 #include "Skybox.h"
 #include "Planet.h"
+#include "BlinnPhong.h"
 
 class SandBox : public Engine::Application
 {
 public:
 	SandBox()
 	{
-		PushLayer(new Planet());
+		PushLayer(new BlinnPhong());
 	}
 	~SandBox()
 	{

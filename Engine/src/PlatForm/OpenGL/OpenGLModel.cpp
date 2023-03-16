@@ -65,7 +65,7 @@ namespace Engine
 		// data to fill
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
-		std::vector<ModelTexture> modelTextures;
+		std::vector<MaterialTexture> modelTextures;
 
 		for (uint32_t i = 0; i < mesh->mNumVertices; i++)
 		{
@@ -116,24 +116,24 @@ namespace Engine
 		// normal: texture_normalN
 
 		// 1. diffuse maps
-		std::vector<ModelTexture> diffuseMaps = LoadMateriaTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+		std::vector<MaterialTexture> diffuseMaps = LoadMateriaTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
 		modelTextures.insert(modelTextures.end(), diffuseMaps.begin(), diffuseMaps.end());
 		// 2. specular maps
-		std::vector<ModelTexture> specularMaps = LoadMateriaTextures(material, aiTextureType_SPECULAR, "texture_specular");
+		std::vector<MaterialTexture> specularMaps = LoadMateriaTextures(material, aiTextureType_SPECULAR, "texture_specular");
 		modelTextures.insert(modelTextures.end(), specularMaps.begin(), specularMaps.end());
 		// 3. normal maps
-		std::vector<ModelTexture> normalMaps = LoadMateriaTextures(material, aiTextureType_NORMALS, "texture_normal");
+		std::vector<MaterialTexture> normalMaps = LoadMateriaTextures(material, aiTextureType_NORMALS, "texture_normal");
 		modelTextures.insert(modelTextures.end(), normalMaps.begin(), normalMaps.end());
 
-		std::vector<ModelTexture> heightMaps = LoadMateriaTextures(material, aiTextureType_HEIGHT, "texture_height");
+		std::vector<MaterialTexture> heightMaps = LoadMateriaTextures(material, aiTextureType_HEIGHT, "texture_height");
 		modelTextures.insert(modelTextures.end(), heightMaps.begin(), heightMaps.end());
 
 		return Mesh::Create(vertices, indices, modelTextures);
 	}
 
-	std::vector<ModelTexture> OpenGLModel::LoadMateriaTextures(aiMaterial* material, aiTextureType type, std::string typeName)
+	std::vector<MaterialTexture> OpenGLModel::LoadMateriaTextures(aiMaterial* material, aiTextureType type, std::string typeName)
 	{
-		std::vector<ModelTexture> modelTextures;
+		std::vector<MaterialTexture> modelTextures;
 
 		for (uint32_t i = 0; i < material->GetTextureCount(type); i++)
 		{
@@ -153,15 +153,15 @@ namespace Engine
 
 			if (!skip)
 			{
-				ModelTexture modelTexture;
+				MaterialTexture materialTexture;
 				std::string filename = m_Directory + "/" + std::string(str.C_Str());
 				Ref<Texture2D> texture = Texture2D::Create(filename);
-				modelTexture.Id = std::dynamic_pointer_cast<OpenGLTexture2D>(texture)->GetRendererId();
-				modelTexture.Type = typeName;
-				modelTexture.Path = str.C_Str();
-				modelTexture.Texture = texture;
-				modelTextures.push_back(modelTexture);
-				m_Textures.push_back(modelTexture);
+				materialTexture.Id = std::dynamic_pointer_cast<OpenGLTexture2D>(texture)->GetRendererId();
+				materialTexture.Type = typeName;
+				materialTexture.Path = str.C_Str();
+				materialTexture.Texture = texture;
+				modelTextures.push_back(materialTexture);
+				m_Textures.push_back(materialTexture);
 			}
 		}
 

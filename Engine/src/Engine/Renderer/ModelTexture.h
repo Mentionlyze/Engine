@@ -1,13 +1,18 @@
 #pragma once
-#include "Texture.h"
+#include "MaterialTexture.h"
 
 namespace Engine
 {
-	struct ModelTexture
+	class ModelTexture
 	{
-		unsigned int Id;
-		std::string Type;
-		std::string Path;
-		Ref<Texture2D> Texture;
+	public:
+		
+		virtual ~ModelTexture() = default;
+
+		virtual void AddMaterialTexture(const std::string& path, const std::string& name) = 0;
+
+		static Ref<ModelTexture> Create();
+		static Ref<ModelTexture> Create(const std::initializer_list<MaterialTexture>& textures);
 	};
 }
+
