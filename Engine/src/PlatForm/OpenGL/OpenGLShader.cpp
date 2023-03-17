@@ -202,10 +202,22 @@ namespace Engine
 		UpdateUniformMat4(name, value);
 	}
 
+	void OpenGLShader::SetFloat3fv(const std::string& name, uint32_t count, const glm::vec3& value)
+	{
+		UpdateFloat3fv(name, count, value);
+	}
+
+
 	void OpenGLShader::UpdateFloat3(const std::string& name, const glm::vec3& value)
 	{
 		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
 		glUniform3f(location, value.x, value.y, value.z);
+	}
+
+	void OpenGLShader::UpdateFloat3fv(const std::string& name, uint32_t count, const glm::vec3& value)
+	{
+		GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+		glUniform3fv(location, count, glm::value_ptr(value));
 	}
 
 	void OpenGLShader::UpdateUniformMat4(const std::string& name, const glm::mat4& matrix)

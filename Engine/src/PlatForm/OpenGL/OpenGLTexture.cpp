@@ -6,7 +6,7 @@
 
 namespace Engine
 {
-	OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : m_Path(path)
+	OpenGLTexture2D::OpenGLTexture2D(const std::string& path, bool gammaCorrection) : m_Path(path)
 	{
 		int width, height, channels;
 
@@ -21,12 +21,12 @@ namespace Engine
 		GLenum internalFormat = 0, dataFormat = 0;
 		if (channels == 4)
 		{
-			internalFormat = GL_RGBA8;
+			internalFormat = gammaCorrection ? GL_SRC1_ALPHA : GL_RGBA8;
 			dataFormat = GL_RGBA;
 		}
 		else if (channels == 3)
 		{
-			internalFormat = GL_RGBA8;
+			internalFormat = gammaCorrection ? GL_SRGB8 : GL_RGBA8;
 			dataFormat = GL_RGB;
 		}
 		else if (channels == 1)

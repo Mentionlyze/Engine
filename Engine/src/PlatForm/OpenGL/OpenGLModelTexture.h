@@ -14,7 +14,7 @@ namespace Engine
 		~OpenGLModelTexture();
 
 
-		void AddMaterialTexture(const std::string& path, const std::string& name) override;
+		void AddMaterialTexture(const std::string& path, const std::string& name, bool gammaCorrection = false) override;
 	};
 }
 

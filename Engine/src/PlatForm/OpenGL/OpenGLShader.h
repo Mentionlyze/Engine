@@ -18,15 +18,16 @@ namespace Engine
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
 		virtual const std::string& GetName() const override { return m_Name; }
-
 	
 		void SetFloat(const std::string& name, float value);
 		void SetInt(const std::string& name, uint32_t value);
 		void SetFloat3(const std::string& name, const glm::vec3& value);
 		void SetMat4(const std::string& name, const glm::mat4& value);
 
+		void SetFloat3fv(const std::string& name, uint32_t count, const glm::vec3& value);
 		
 		void UpdateFloat3(const std::string& name, const glm::vec3& value);
+		void UpdateFloat3fv(const std::string& name, uint32_t count, const glm::vec3& value);
 		void UpdateUniformMat4(const std::string& name, const glm::mat4& matrix);
 
 	private:

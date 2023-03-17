@@ -16,10 +16,10 @@ namespace Engine
 	{
 	}
 
-	void OpenGLModelTexture::AddMaterialTexture(const std::string& path, const std::string& name) 
+	void OpenGLModelTexture::AddMaterialTexture(const std::string& path, const std::string& name, bool gammaCorrection) 
 	{
 		MaterialTexture modelTexture;
-		auto texture = Texture2D::Create(path);
+		auto texture = Texture2D::Create(path, gammaCorrection);
 
 		modelTexture.Id = std::dynamic_pointer_cast<OpenGLTexture2D>(texture)->GetRendererId();
 		modelTexture.Type = name;
