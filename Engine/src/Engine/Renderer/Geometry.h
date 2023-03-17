@@ -12,6 +12,7 @@ namespace Engine
 
 		virtual Ref<VertexArray> GetVertextArray() const = 0;
 		virtual glm::mat4 GetTransform() const = 0;
+		virtual void SetTransform(const glm::mat4& transform) = 0;
 		
 		static Ref<Geometry> CreateBox(const glm::mat4& transform);
 		static Ref<Geometry> CreatePlane(const glm::mat4& transform);

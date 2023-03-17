@@ -17,7 +17,7 @@ uniform mat4 u_Transform;
 void main()
 {
 	vs_out.FragPos = a_Pos;
-	vs_out.Normal = a_Normal;
+	vs_out.Normal = transpose(inverse(mat3(u_Transform))) * a_Normal;
 	vs_out.TexCoord = a_TexCoord;
 
 	gl_Position = u_ViewProjection * u_Transform * vec4(a_Pos, 1.0);

@@ -10,6 +10,7 @@ namespace Engine
 		virtual ~OpenGLPlaneGeometry();
 
 		Ref<VertexArray> GetVertextArray() const override { return m_VertexArray; };
+		void SetTransform(const glm::mat4& transform) override;
 		glm::mat4 GetTransform() const override { return m_Transform; };
 
 	private:

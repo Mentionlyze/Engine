@@ -9,13 +9,14 @@
 #include "Skybox.h"
 #include "Planet.h"
 #include "BlinnPhong.h"
+#include "ShadowMap.h"
 
 class SandBox : public Engine::Application
 {
 public:
 	SandBox()
 	{
-		PushLayer(new BlinnPhong());
+		PushLayer(new ShadowMap());
 	}
 	~SandBox()
 	{

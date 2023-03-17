@@ -37,5 +37,10 @@ namespace Engine
 	OpenGLPlaneGeometry::~OpenGLPlaneGeometry()
 	{
 	}
+
+	void OpenGLPlaneGeometry::SetTransform(const glm::mat4& transform)
+	{
+		m_Transform = transform;
+	}
 }
 
