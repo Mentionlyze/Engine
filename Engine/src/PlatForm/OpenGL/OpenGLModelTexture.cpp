@@ -21,9 +21,21 @@ namespace Engine
 		MaterialTexture modelTexture;
 		auto texture = Texture2D::Create(path, gammaCorrection);
 
-		modelTexture.Id = std::dynamic_pointer_cast<OpenGLTexture2D>(texture)->GetRendererId();
+		modelTexture.Id = std::dynamic_pointer_cast<OpenGLTexture2D>(texture)->GetRendererID();
 		modelTexture.Type = name;
 		modelTexture.Path = path;
+		modelTexture.Texture = texture;
+
+		m_Texuters.push_back(modelTexture);
+	}
+
+	void OpenGLModelTexture::AddMaterialTexture(const Ref<TextureDepthMap> texture)
+	{
+		MaterialTexture modelTexture;
+		
+		modelTexture.Id = std::dynamic_pointer_cast<OpenGLTextureDepthMap>(texture)->GetRendererID();
+		modelTexture.Type = "shadowMap";
+		modelTexture.Path = "";
 		modelTexture.Texture = texture;
 
 		m_Texuters.push_back(modelTexture);

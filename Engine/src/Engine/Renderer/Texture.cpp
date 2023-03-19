@@ -8,4 +8,8 @@ namespace Engine
 	{
 		return CreateRef<OpenGLTexture2D>(path, gammaCorrection);
 	}
+	Ref<TextureDepthMap> TextureDepthMap::Create(uint32_t width, uint32_t height)
+	{
+		return CreateRef<OpenGLTextureDepthMap>(width, height);
+	}
 }

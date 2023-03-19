@@ -15,4 +15,9 @@ namespace Engine
 	{
 		return CreateRef<OpenGLIndexBuffer>(indices, count);
 	}
+
+	Ref<FrameBuffer> FrameBuffer::Create()
+	{
+		return CreateRef<OpenGLFrameBuffer>();
+	}
 }

@@ -6,9 +6,11 @@ in VS_OUT {
 	vec3 FragPos;
 	vec3 Normal;
 	vec2 TexCoord;
+	vec4 FragPosLightSpace;
 } fs_in;
 
 uniform sampler2D texture_diffuse;
+uniform sampler2D shadowMap;
 uniform vec3 u_LightPos;
 uniform vec3 u_LightColor;
 uniform vec3 u_ViewPosition;
@@ -33,11 +35,47 @@ vec3 BlinnPhong(vec3 normal, vec3 fragPos, vec3 lightPos, vec3 lightColor)
 	float distance = length(lightPos - fragPos);
 	float attenuation = 1.0 / (u_Gamma ? distance : distance * distance);
 
-	diffuse *= attenuation;
-	specular *= attenuation;
+	//diffuse *= attenuation;
+	//specular *= attenuation;
 
 	return diffuse + specular;
 }
+
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+	// perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(shadowMap, projCoords.xy).r; 
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
+    // calculate bias (based on depth map resolution and slope)
+    vec3 normal = normalize(fs_in.Normal);
+    vec3 lightDir = normalize(u_LightPos - fs_in.FragPos);
+    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+    // check whether current frag pos is in shadow
+    // float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+    // PCF
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
+            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;        
+        }    
+    }
+    shadow /= 9.0;
+    
+    // keep the shadow at 0.0 when outside the far_plane region of the light's frustum.
+    if(projCoords.z > 1.0)
+        shadow = 0.0;
+        
+    return shadow;
+};
 
 vec3 Phong(vec3 normal, vec3 fragPos, vec3 lightPos, vec3 lightColor)
 {
@@ -66,13 +104,20 @@ vec3 Phong(vec3 normal, vec3 fragPos, vec3 lightPos, vec3 lightColor)
 void main()
 {
 	vec3 color = texture(texture_diffuse, fs_in.TexCoord).rgb;
+
+	vec3 ambient = 0.3 * vec3(0.3);
+
 	vec3 lighting = vec3(0.0);
 
 	vec3 lightingFilter = u_Blinn 
-			? BlinnPhong(normalize(fs_in.Normal), fs_in.FragPos, u_LightPos, u_LightColor)
-			: Phong(normalize(fs_in.Normal), fs_in.FragPos, u_LightPos, u_LightColor);
+		? BlinnPhong(normalize(fs_in.Normal), fs_in.FragPos, u_LightPos, u_LightColor)
+		: Phong(normalize(fs_in.Normal), fs_in.FragPos, u_LightPos, u_LightColor);
 
 	lighting += lightingFilter;
+
+	float shadow = ShadowCalculation(fs_in.FragPosLightSpace);  
+
+	lighting *= (ambient + (1.0 - shadow));
 	color *= lighting;
 
 	if (u_Gamma)

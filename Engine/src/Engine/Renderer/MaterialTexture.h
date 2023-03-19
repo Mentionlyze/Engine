@@ -5,9 +5,9 @@ namespace Engine
 {
 	struct MaterialTexture
 	{
-		unsigned int Id;
+		uint32_t Id;
 		std::string Type;
 		std::string Path;
-		Ref<Texture2D> Texture;
+		Ref<Texture> Texture;
 	};
 }

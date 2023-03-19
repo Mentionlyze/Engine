@@ -17,7 +17,7 @@ namespace Engine
 		static void OnWindowResize(uint32_t width, uint32_t height);
 		static void BeginScene(Camera& camera);
 		static void EndScene();
-		static void Submit(const Ref<VertexArray>& vertexArray, const Ref<Shader>& shader, const glm::mat4& transform, bool skybox = false);
+		static void Submit(const Ref<VertexArray>& vertexArray, const Ref<Shader>& shader, const glm::mat4& transform, bool skybox = false, bool withCamera = true);
 		static void SubmitInstanced(uint32_t rendererId, GLenum mode, uint32_t count, uint32_t amount, const Ref<Shader>& shader, const glm::mat4& transform);
 		static Ref<ShaderLibrary> GetShaderLibrary() { return s_ShaderLibrary; }
 		static Ref<ModelLibrary> GetModelLibrary() { return s_ModelLibrary; }

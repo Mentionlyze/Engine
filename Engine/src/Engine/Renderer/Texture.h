@@ -18,4 +18,10 @@ namespace Engine
 	public:
 		static Ref<Texture2D> Create(const std::string& path, bool gammaCorrection = false);
 	};
+
+	class TextureDepthMap : public Texture
+	{
+	public:
+		static Ref<TextureDepthMap> Create(uint32_t width, uint32_t height);
+	};
 }

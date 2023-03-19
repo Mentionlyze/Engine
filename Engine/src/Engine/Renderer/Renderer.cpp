@@ -33,25 +33,28 @@ namespace Engine
 
 	}
 
-	void Renderer::Submit(const Ref<VertexArray>& vertexArray, const Ref<Shader>& shader, const glm::mat4& transform, bool skybox)
+	void Renderer::Submit(const Ref<VertexArray>& vertexArray, const Ref<Shader>& shader, const glm::mat4& transform, bool skybox, bool withCamera)
 	{
 		shader->Bind();
 
-		if (skybox) 
+		if (withCamera)
 		{
-			glm::mat4 projectiMatrix = s_SceneData->ProjectionMatrix;
-			glm::mat4 viewMatrix = glm::mat4(glm::mat3(s_SceneData->ViewMatrix));
+			if (skybox)
+			{
+				glm::mat4 projectiMatrix = s_SceneData->ProjectionMatrix;
+				glm::mat4 viewMatrix = glm::mat4(glm::mat3(s_SceneData->ViewMatrix));
 
-			std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_ViewProjection", projectiMatrix * viewMatrix);
+				std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_ViewProjection", projectiMatrix * viewMatrix);
+			}
+			else
+			{
+				std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
+			}
+			std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_Projection", s_SceneData->ProjectionMatrix);
+			std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_View", s_SceneData->ViewMatrix);
+			std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_Transform", transform);
+			std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateFloat3("u_ViewPosition", s_SceneData->CameraPosition);
 		}
-		else 
-		{
-			std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
-		}
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_Projection", s_SceneData->ProjectionMatrix);
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_View", s_SceneData->ViewMatrix);
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateUniformMat4("u_Transform", transform);
-		std::dynamic_pointer_cast<OpenGLShader>(shader)->UpdateFloat3("u_ViewPosition", s_SceneData->CameraPosition);
 
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);

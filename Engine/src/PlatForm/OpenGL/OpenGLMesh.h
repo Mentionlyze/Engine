@@ -19,8 +19,8 @@ namespace Engine
 
 		Ref<VertexArray> GetVertexArray() { return m_VertexArray; };
 
-		void Submit(const Ref<Shader>& shader, const glm::mat4& transform) const override;
-		void Submit(const Ref<Shader>& shader) const override;
+		void Submit(const Ref<Shader>& shader, const glm::mat4& transform, bool withCamera) const override;
+		void Submit(const Ref<Shader>& shader, bool withCamera) const override;
 
 	private:
 		Ref<VertexArray> m_VertexArray;

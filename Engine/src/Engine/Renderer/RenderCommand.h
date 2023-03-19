@@ -28,6 +28,11 @@ namespace Engine
 			s_RendererAPI->Clear();
 		}
 
+		inline static void DepthClear()
+		{
+			s_RendererAPI->DepthClear();
+		}
+
 		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray)
 		{
 			s_RendererAPI->DrawIndexed(vertexArray);

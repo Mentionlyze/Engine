@@ -128,5 +128,18 @@ namespace Engine
 
 		static Ref<IndexBuffer> Create(const void *indices, uint32_t count);
 	};
+
+	class FrameBuffer
+	{
+	public:
+		virtual ~FrameBuffer() = default;
+
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
+
+		virtual void SetTexture2D(uint32_t textureID) const = 0;
+
+		static Ref<FrameBuffer> Create();
+	};
 }
 

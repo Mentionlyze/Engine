@@ -34,9 +34,12 @@
 #include "PlatForm/OpenGL/OrthoGraphicCameraController.h"
 #include "PlatForm/OpenGL/PerspectiveCameraController.h"
 #include "PlatForm/OpenGL/OpenGLShader.h"
+#include "PlatForm/OpenGL/OpenGLTexture.h"
 #include "PlatForm/OpenGL/OpenGLMesh.h"
 #include "PlatForm/OpenGL/OpenGLModel.h"
 #include "PlatForm/OpenGL/OpenGLCubeMap.h"
+#include "PlatForm/OpenGL/OpenGLPlaneGeometry.h"
+#include "PlatForm/OpenGL/OpenGLBoxGeometry.h"
 #include "PlatForm/OpenGL/OpenGLModelTexture.h"
 
 #include "Engine/ImGui/ImGuiLayer.h"

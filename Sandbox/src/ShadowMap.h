@@ -11,10 +11,14 @@ public:
 	void OnEvent(Engine::Event& e) override;
 	void OnImGuiRender() override;
 
+	void RenderScene(Engine::Ref<Engine::Shader> shader, bool withCamera = true);
+
 private:
 	Engine::PerspectiveCameraController m_CameraController;
 	Engine::Ref<Engine::Shader> m_Shader;
 	Engine::Ref<Engine::Shader> m_LightShader;
+	Engine::Ref<Engine::Shader> m_DepthShader;
+
 	Engine::Ref<Engine::Geometry> m_LightGeometry;
 	Engine::Ref<Engine::Geometry> m_PlaneGeometry;
 	Engine::Ref<Engine::Geometry> m_BoxGeometry;
@@ -22,6 +26,9 @@ private:
 	Engine::Ref<Engine::Mesh> m_PlaneMesh;
 	Engine::Ref<Engine::Mesh> m_BoxMesh;
 	Engine::Ref<Engine::ModelTexture> m_ModelTexture;
+	Engine::Ref<Engine::TextureDepthMap> m_DepthTexture;
+
+	Engine::Ref<Engine::FrameBuffer> m_FrameBuffer;
 
 	glm::vec3 m_LightPos = glm::vec3(0.0f, 4.0f, -1.0f);
 	glm::vec3 m_LightColor = glm::vec3(1.0);

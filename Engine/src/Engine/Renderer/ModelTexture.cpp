@@ -8,6 +8,7 @@ namespace Engine
 	{
 		return CreateRef<OpenGLModelTexture>();
 	}
+
 	Ref<ModelTexture> ModelTexture::Create(const std::initializer_list<MaterialTexture>& textures)
 	{
 		return CreateRef<OpenGLModelTexture>(textures);

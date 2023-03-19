@@ -34,7 +34,7 @@ namespace Engine
 
 	}
 
-	void OpenGLMesh::Submit(const Ref<Shader>& shader, const glm::mat4& transform) const 
+	void OpenGLMesh::Submit(const Ref<Shader>& shader, const glm::mat4& transform, bool withCamera) const 
 	{
 		// bind appropriate textures
 		uint32_t diffuseNr  = 1;
@@ -60,11 +60,11 @@ namespace Engine
 			m_Textures[i].Texture->Bind(i);
 		}
 
-		Renderer::Submit(m_VertexArray, shader, transform);
+		Renderer::Submit(m_VertexArray, shader, transform, false, withCamera);
 		glActiveTexture(GL_TEXTURE0);
 	}
 
-	void OpenGLMesh::Submit(const Ref<Shader>& shader) const
+	void OpenGLMesh::Submit(const Ref<Shader>& shader, bool withCamera) const
 	{
 		for (uint32_t i = 0; i < m_Textures.size(); i++)
 		{
@@ -73,7 +73,7 @@ namespace Engine
 			m_Textures[i].Texture->Bind(i);
 		}
 
-		Renderer::Submit(m_Geometry->GetVertextArray(), shader, m_Geometry->GetTransform());
+		Renderer::Submit(m_Geometry->GetVertextArray(), shader, m_Geometry->GetTransform(), false, withCamera);
 		glActiveTexture(GL_TEXTURE0);
 	}
 }

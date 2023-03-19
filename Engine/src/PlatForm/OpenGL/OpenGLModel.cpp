@@ -156,7 +156,7 @@ namespace Engine
 				MaterialTexture materialTexture;
 				std::string filename = m_Directory + "/" + std::string(str.C_Str());
 				Ref<Texture2D> texture = Texture2D::Create(filename);
-				materialTexture.Id = std::dynamic_pointer_cast<OpenGLTexture2D>(texture)->GetRendererId();
+				materialTexture.Id = std::dynamic_pointer_cast<OpenGLTexture2D>(texture)->GetRendererID();
 				materialTexture.Type = typeName;
 				materialTexture.Path = str.C_Str();
 				materialTexture.Texture = texture;

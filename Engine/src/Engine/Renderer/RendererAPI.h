@@ -22,6 +22,7 @@ namespace Engine
 		virtual void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
 		virtual void SetClearColor(const glm::vec4& color) = 0;
 		virtual void Clear() = 0;
+		virtual void DepthClear() = 0;
 
 		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) = 0;
 		virtual void DrawElementInstanced(GLenum mode, uint32_t count, uint32_t amount) = 0;
