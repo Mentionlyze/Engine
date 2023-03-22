@@ -6,6 +6,8 @@
 PointLightShadow::PointLightShadow() : Layer("ShadowMap"),
 m_CameraController(75.0f, 1.6f / 0.9f, 0.1f, 1000.0f)
 {
+	m_CameraController.GetCamera().SetPosition({ 0.0f, 0.0f, 3.0f });
+
 	m_PlaneGeometry = Engine::Geometry::CreatePlane(glm::mat4(1.0f));
 	m_BoxGeometry = Engine::Geometry::CreateBox(glm::mat4(1.0f));
 	m_LightGeometry = Engine::Geometry::CreateBox(glm::translate(glm::mat4(1.0f), m_LightPos));
@@ -13,16 +15,16 @@ m_CameraController(75.0f, 1.6f / 0.9f, 0.1f, 1000.0f)
 	m_ModelTexture = Engine::ModelTexture::Create();
 	m_ModelTexture->AddMaterialTexture("assets/textures/wood.png", "texture_diffuse", true);
 
-	m_Shader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/ShadowMap.vert", "assets/shaders/ShadowMap.frag");
+	m_Shader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/ShadowMap.vert", "assets/shaders/PointShadow.frag");
 	m_Shader->Bind();
 
 	m_LightShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/LightCube.vert", "assets/shaders/LightCube.frag");
 	m_DepthShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/depth.vert", "assets/shaders/depth.frag");
 
 	m_FrameBuffer = Engine::FrameBuffer::Create();
-	m_DepthTexture = Engine::TextureDepthMap::Create(2048, 2048);
+	m_DepthTexture = Engine::TextureDepthCubeMap::Create(2048, 2048);
 
-	m_FrameBuffer->SetTexture2D(std::dynamic_pointer_cast<Engine::OpenGLTextureDepthMap>(m_DepthTexture)->GetRendererID());
+	m_FrameBuffer->SetTexture(std::dynamic_pointer_cast<Engine::OpenGLTextureDepthCubMap>(m_DepthTexture)->GetRendererID());
 	m_FrameBuffer->Unbind();
 
 	m_ModelTexture->AddMaterialTexture(m_DepthTexture);
@@ -63,7 +65,6 @@ void PointLightShadow::OnUpdate(Engine::Timestep ts)
 	Engine::RenderCommand::SetViewport(0, 0, 1600, 900);
 	Engine::RenderCommand::Clear();
 
-
 	m_Shader->Bind();
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetMat4("u_LightSpaceMatrix", lightSpaceMatrix);
 	RenderScene(m_Shader);
@@ -78,6 +79,7 @@ void PointLightShadow::OnUpdate(Engine::Timestep ts)
 
 void PointLightShadow::OnEvent(Engine::Event& e)
 {
+
 }
 
 void PointLightShadow::OnImGuiRender()

@@ -26,11 +26,11 @@ private:
 	Engine::Ref<Engine::Mesh> m_PlaneMesh;
 	Engine::Ref<Engine::Mesh> m_BoxMesh;
 	Engine::Ref<Engine::ModelTexture> m_ModelTexture;
-	Engine::Ref<Engine::TextureDepthMap> m_DepthTexture;
+	Engine::Ref<Engine::TextureDepthCubeMap> m_DepthTexture;
 
 	Engine::Ref<Engine::FrameBuffer> m_FrameBuffer;
 
-	glm::vec3 m_LightPos = glm::vec3(0.0f, 4.0f, -1.0f);
+	glm::vec3 m_LightPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 m_LightColor = glm::vec3(1.0);
 
 	glm::mat4 m_BoxTransforms[3] = {

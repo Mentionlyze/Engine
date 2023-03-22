@@ -37,7 +37,6 @@
 #include "PlatForm/OpenGL/OpenGLTexture.h"
 #include "PlatForm/OpenGL/OpenGLMesh.h"
 #include "PlatForm/OpenGL/OpenGLModel.h"
-#include "PlatForm/OpenGL/OpenGLCubeMap.h"
 #include "PlatForm/OpenGL/OpenGLPlaneGeometry.h"
 #include "PlatForm/OpenGL/OpenGLBoxGeometry.h"
 #include "PlatForm/OpenGL/OpenGLModelTexture.h"

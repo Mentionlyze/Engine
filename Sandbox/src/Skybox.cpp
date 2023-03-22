@@ -69,7 +69,7 @@ Skybox::Skybox() : Layer("Skybox"),
         "assets/textures/skybox/front.jpg",
         "assets/textures/skybox/back.jpg",
     };
-    m_SkyboxMap = Engine::CubeMap::Create(faces);
+    m_SkyboxMap = Engine::TextureCubeMap::Create(faces);
 
     m_CubeVertexArray = Engine::VertexArray::Create();
     float vertices[8 * 24] = {

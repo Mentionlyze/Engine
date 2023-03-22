@@ -24,4 +24,17 @@ namespace Engine
 	public:
 		static Ref<TextureDepthMap> Create(uint32_t width, uint32_t height);
 	};
+
+	class TextureCubeMap : public Texture
+	{
+	public:
+		static Ref<TextureCubeMap> Create(const std::vector<std::string>& faces);
+	};
+
+	class TextureDepthCubeMap : public Texture
+	{
+	public:
+		static Ref<TextureDepthCubeMap> Create(uint32_t width, uint32_t height);
+	};
+
 }

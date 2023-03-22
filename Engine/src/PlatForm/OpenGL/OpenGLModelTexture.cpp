@@ -40,4 +40,17 @@ namespace Engine
 
 		m_Texuters.push_back(modelTexture);
 	}
+
+	void OpenGLModelTexture::AddMaterialTexture(const Ref<TextureDepthCubeMap> texture)
+	{
+		MaterialTexture modelTexture;
+		
+		modelTexture.Id = std::dynamic_pointer_cast<OpenGLTextureDepthCubMap>(texture)->GetRendererID();
+		modelTexture.Type = "shadowMap";
+		modelTexture.Path = "";
+		modelTexture.Texture = texture;
+
+		m_Texuters.push_back(modelTexture);
+	}
+
 }

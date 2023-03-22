@@ -22,7 +22,7 @@ ShadowMap::ShadowMap() : Layer("ShadowMap"),
 	m_FrameBuffer = Engine::FrameBuffer::Create();
 	m_DepthTexture = Engine::TextureDepthMap::Create(2048, 2048);
 
-	m_FrameBuffer->SetTexture2D(std::dynamic_pointer_cast<Engine::OpenGLTextureDepthMap>(m_DepthTexture)->GetRendererID());
+	m_FrameBuffer->SetTexture(std::dynamic_pointer_cast<Engine::OpenGLTextureDepthMap>(m_DepthTexture)->GetRendererID());
 	m_FrameBuffer->Unbind();
 
 	m_ModelTexture->AddMaterialTexture(m_DepthTexture);

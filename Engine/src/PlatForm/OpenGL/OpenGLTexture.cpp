@@ -95,4 +95,98 @@ namespace Engine
 	{
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+
+	OpenGLTextureCubeMap::OpenGLTextureCubeMap(const std::vector<std::string>& faces) : m_Faces(faces)
+	{
+		int width, height, channels;
+		GLenum internalFormat = 0, dataFormat = 0;
+
+		glGenTextures(1, &m_RendererId);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererId);
+
+		for (uint32_t i = 0; i < faces.size(); i++)
+		{
+			stbi_uc* data = stbi_load(faces[i].c_str(), &width, &height, &channels, 0);
+			ENGINE_CORE_ASSERT(data, "Failed to load image");
+
+			if (channels == 4)
+			{
+				internalFormat = GL_RGBA8;
+				dataFormat = GL_RGBA;
+			}
+			else if (channels == 3)
+			{
+				internalFormat = GL_RGBA8;
+				dataFormat = GL_RGB;
+			}
+			else if (channels == 1)
+			{
+				internalFormat = GL_RED;
+				dataFormat = GL_RED;
+			}
+
+			ENGINE_CORE_INFO(internalFormat & dataFormat);
+			ENGINE_CORE_ASSERT(internalFormat && dataFormat, "Format not suported!");
+
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, internalFormat, width, height, 0, dataFormat, GL_UNSIGNED_BYTE, data);
+			stbi_image_free(data);
+		}
+
+		m_Width = width;
+		m_Height = height;
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	}
+
+	OpenGLTextureCubeMap::~OpenGLTextureCubeMap()
+	{
+		glDeleteTextures(1, &m_RendererId);
+	}
+
+	void OpenGLTextureCubeMap::Bind(uint32_t slot) const
+	{
+		glBindTextureUnit(m_RendererId, slot);
+	}
+
+	void OpenGLTextureCubeMap::Unbind() const
+	{
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
+
+
+	OpenGLTextureDepthCubMap::OpenGLTextureDepthCubMap(uint32_t width, uint32_t height) : m_Width(width), m_Height(height)
+	{
+		glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_RendererID);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
+
+		for (uint32_t i = 0; i < 6; i++) 
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	}
+
+	OpenGLTextureDepthCubMap::~OpenGLTextureDepthCubMap()
+	{
+		glDeleteTextures(1, &m_RendererID);
+	}
+
+	void OpenGLTextureDepthCubMap::Bind(uint32_t slot) const
+	{
+		glBindTextureUnit(m_RendererID, slot);
+	}
+
+	void OpenGLTextureDepthCubMap::Unbind() const
+	{
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
+
 }

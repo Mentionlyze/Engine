@@ -137,7 +137,7 @@ namespace Engine
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 
-		virtual void SetTexture2D(uint32_t textureID) const = 0;
+		virtual void SetTexture(uint32_t textureID) const = 0;
 
 		static Ref<FrameBuffer> Create();
 	};

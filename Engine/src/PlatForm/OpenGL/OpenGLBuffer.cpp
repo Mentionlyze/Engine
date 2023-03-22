@@ -73,7 +73,7 @@ namespace Engine
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void OpenGLFrameBuffer::SetTexture2D(uint32_t textureID) const
+	void OpenGLFrameBuffer::SetTexture(uint32_t textureID) const
 	{
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, textureID, 0);
 		glDrawBuffer(GL_NONE);
