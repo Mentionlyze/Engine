@@ -40,6 +40,18 @@ namespace Engine
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 
+	void OpenGLRendererAPI::EnableCullFace()
+	{
+		glEnable(GL_CULL_FACE);
+	}
+
+	void OpenGLRendererAPI::DisableCullFace()
+	{
+		glDisable(GL_CULL_FACE);
+	}
+
+
+
 	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray)
 	{
 		glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);

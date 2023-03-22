@@ -1,10 +1,10 @@
-#include "ShadowMap.h"
+#include "PointLightShadow.h"
 #include <imgui/imgui.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-ShadowMap::ShadowMap() : Layer("ShadowMap"), 
-	m_CameraController(75.0f, 1.6f / 0.9f, 0.1f, 1000.0f)
+PointLightShadow::PointLightShadow() : Layer("ShadowMap"),
+m_CameraController(75.0f, 1.6f / 0.9f, 0.1f, 1000.0f)
 {
 	m_PlaneGeometry = Engine::Geometry::CreatePlane(glm::mat4(1.0f));
 	m_BoxGeometry = Engine::Geometry::CreateBox(glm::mat4(1.0f));
@@ -33,7 +33,7 @@ ShadowMap::ShadowMap() : Layer("ShadowMap"),
 }
 
 
-void ShadowMap::OnUpdate(Engine::Timestep ts)
+void PointLightShadow::OnUpdate(Engine::Timestep ts)
 {
 	m_CameraController.OnUpdate(ts);
 
@@ -76,11 +76,11 @@ void ShadowMap::OnUpdate(Engine::Timestep ts)
 	Engine::Renderer::EndScene();
 }
 
-void ShadowMap::OnEvent(Engine::Event& e)
+void PointLightShadow::OnEvent(Engine::Event& e)
 {
 }
 
-void ShadowMap::OnImGuiRender()
+void PointLightShadow::OnImGuiRender()
 {
 	ImGui::Begin("Advanced Light");
 	if (ImGui::Button("Blinn Phong"))
@@ -110,7 +110,7 @@ void ShadowMap::OnImGuiRender()
 
 }
 
-void ShadowMap::RenderScene(Engine::Ref<Engine::Shader> shader, bool withCamera)
+void PointLightShadow::RenderScene(Engine::Ref<Engine::Shader> shader, bool withCamera)
 {
 	shader->Bind();
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(shader)->SetInt("u_Blinn", m_Blinn);
@@ -118,7 +118,11 @@ void ShadowMap::RenderScene(Engine::Ref<Engine::Shader> shader, bool withCamera)
 
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(shader)->SetFloat3("u_LightPos", m_LightPos);
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(shader)->SetFloat3("u_LightColor", m_LightColor);
-	m_PlaneMesh->Submit(m_Shader, withCamera);
+
+	m_BoxGeometry->SetTransform(glm::scale(glm::mat4(1.0f), glm::vec3(5.0f)));
+	Engine::RenderCommand::DisableCullFace();
+	m_BoxMesh->Submit(shader, withCamera);
+	Engine::RenderCommand::EnableCullFace();
 
 	for (uint32_t i = 0; i < 3; i++)
 	{

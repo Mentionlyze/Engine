@@ -67,8 +67,9 @@ namespace Engine
 	OpenGLTextureDepthMap::OpenGLTextureDepthMap(uint32_t width, uint32_t height) : m_Width(width), m_Height(height)
 	{
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
-		glTextureStorage2D(m_RendererID, 0, GL_DEPTH_COMPONENT, m_Width, m_Height);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, m_Width, m_Height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+		glBindTexture(GL_TEXTURE_2D, m_RendererID);
+		glTextureStorage2D(m_RendererID, 0, GL_DEPTH_COMPONENT, width, height);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

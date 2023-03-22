@@ -10,13 +10,14 @@
 #include "Planet.h"
 #include "BlinnPhong.h"
 #include "ShadowMap.h"
+#include "PointLightShadow.h"
 
 class SandBox : public Engine::Application
 {
 public:
 	SandBox()
 	{
-		PushLayer(new ShadowMap());
+		PushLayer(new PointLightShadow());
 	}
 	~SandBox()
 	{

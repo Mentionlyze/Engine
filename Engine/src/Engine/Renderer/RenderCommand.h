@@ -33,6 +33,16 @@ namespace Engine
 			s_RendererAPI->DepthClear();
 		}
 
+		inline static void EnableCullFace()
+		{
+			s_RendererAPI->EnableCullFace();
+		}
+
+		inline static void DisableCullFace()
+		{
+			s_RendererAPI->DisableCullFace();
+		}
+
 		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray)
 		{
 			s_RendererAPI->DrawIndexed(vertexArray);
