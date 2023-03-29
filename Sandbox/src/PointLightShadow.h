@@ -48,5 +48,7 @@ private:
 
 	bool m_Blinn = true;
 	bool m_Gamma = true;
+
+	glm::mat4 m_ShadowProjection;
 };
 

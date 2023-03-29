@@ -4,22 +4,23 @@
 #include <glm/gtc/type_ptr.hpp>
 
 PointLightShadow::PointLightShadow() : Layer("ShadowMap"),
-m_CameraController(75.0f, 1.6f / 0.9f, 0.1f, 1000.0f)
+	m_CameraController(75.0f, 1.6f / 0.9f, 0.1f, 1000.0f),
+	m_ShadowProjection(glm::perspective(90.0f, 1.0f, 0.1f, 25.0f))
 {
-	m_CameraController.GetCamera().SetPosition({ 0.0f, 0.0f, 3.0f });
+	m_CameraController.SetPosition({ 0.0f, 0.0f, 1.0f });
 
 	m_PlaneGeometry = Engine::Geometry::CreatePlane(glm::mat4(1.0f));
 	m_BoxGeometry = Engine::Geometry::CreateBox(glm::mat4(1.0f));
 	m_LightGeometry = Engine::Geometry::CreateBox(glm::translate(glm::mat4(1.0f), m_LightPos));
 
 	m_ModelTexture = Engine::ModelTexture::Create();
-	m_ModelTexture->AddMaterialTexture("assets/textures/wood.png", "texture_diffuse", true);
+	m_ModelTexture->AddMaterialTexture("assets/textures/wood.png", "texture_diffuse");
 
-	m_Shader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/ShadowMap.vert", "assets/shaders/PointShadow.frag");
+	m_Shader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/PointShadow.vert", "assets/shaders/PointShadow.frag");
 	m_Shader->Bind();
 
 	m_LightShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/LightCube.vert", "assets/shaders/LightCube.frag");
-	m_DepthShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/depth.vert", "assets/shaders/depth.frag");
+	m_DepthShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/PointShadowDepth.vert", "assets/shaders/PointShadowDepth.frag", "assets/shaders/PointShadowDepth.geom");
 
 	m_FrameBuffer = Engine::FrameBuffer::Create();
 	m_DepthTexture = Engine::TextureDepthCubeMap::Create(2048, 2048);
@@ -46,15 +47,23 @@ void PointLightShadow::OnUpdate(Engine::Timestep ts)
 
 	glm::mat4 lightProjection, lightView;
 	glm::mat4 lightSpaceMatrix;
-	float near_plane = 1.0f, far_plane = 7.5f;
-	//lightProjection = glm::perspective(glm::radians(45.0f), (GLfloat)SHADOW_WIDTH / (GLfloat)SHADOW_HEIGHT, near_plane, far_plane); // note that if you use a perspective projection matrix you'll have to change the light position as the current light position isn't enough to reflect the whole scene
-	lightProjection = glm::ortho(-40.0f, 40.0f, -40.0f, 40.0f, near_plane, far_plane);
-	lightView = glm::lookAt(m_LightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
-	lightSpaceMatrix = lightProjection * lightView;
+
+	std::vector<glm::mat4> shadowTransforms;
+	shadowTransforms.push_back(m_ShadowProjection * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+	shadowTransforms.push_back(m_ShadowProjection * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+	shadowTransforms.push_back(m_ShadowProjection * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+	shadowTransforms.push_back(m_ShadowProjection * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
+	shadowTransforms.push_back(m_ShadowProjection * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+	shadowTransforms.push_back(m_ShadowProjection * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 
 	m_DepthShader->Bind();
-	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_DepthShader)->SetMat4("u_LightSpaceMatrix", lightSpaceMatrix);
 	// render scene from light's point of view
+
+	for (uint32_t i = 0; i < 6; ++i)
+		std::dynamic_pointer_cast<Engine::OpenGLShader>(m_DepthShader)->SetMat4("u_ShadowMatrixes[" + std::to_string(i) + "]", shadowTransforms[i]);
+
+	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_DepthShader)->SetFloat("u_FarPlane", 25.0f);
+	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_DepthShader)->SetFloat3("m_LightPos", m_LightPos);
 
 	Engine::RenderCommand::SetViewport(0, 0, m_DepthTexture->GetWidth(), m_DepthTexture->GetHeight());
 	m_FrameBuffer->Bind();
@@ -66,12 +75,13 @@ void PointLightShadow::OnUpdate(Engine::Timestep ts)
 	Engine::RenderCommand::Clear();
 
 	m_Shader->Bind();
-	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetMat4("u_LightSpaceMatrix", lightSpaceMatrix);
+	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_FarPlane", 25.0);
 	RenderScene(m_Shader);
 
 	m_LightShader->Bind();
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_LightShader)->SetFloat3("u_LightColor", m_LightColor);
-	m_LightGeometry->SetTransform(glm::translate(glm::mat4(1.0f), m_LightPos));
+	glm::mat4 transform = glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.3f)), m_LightPos);
+	m_LightGeometry->SetTransform(transform);
 	m_LightMesh->Submit(m_LightShader);
 
 	Engine::Renderer::EndScene();
@@ -123,13 +133,15 @@ void PointLightShadow::RenderScene(Engine::Ref<Engine::Shader> shader, bool with
 
 	m_BoxGeometry->SetTransform(glm::scale(glm::mat4(1.0f), glm::vec3(5.0f)));
 	Engine::RenderCommand::DisableCullFace();
+	std::dynamic_pointer_cast<Engine::OpenGLShader>(shader)->SetInt("u_ReverseNormals", 1);
 	m_BoxMesh->Submit(shader, withCamera);
+	std::dynamic_pointer_cast<Engine::OpenGLShader>(shader)->SetInt("u_ReverseNormals", 0);
 	Engine::RenderCommand::EnableCullFace();
 
-	for (uint32_t i = 0; i < 3; i++)
-	{
-		m_BoxGeometry->SetTransform(m_BoxTransforms[i]);
-		m_BoxMesh->Submit(shader, withCamera);
-	}
+	//for (uint32_t i = 0; i < 3; i++)
+	//{
+	//	m_BoxGeometry->SetTransform(m_BoxTransforms[i]);
+	//	m_BoxMesh->Submit(shader, withCamera);
+	//}
 
 }

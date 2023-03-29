@@ -18,6 +18,8 @@ namespace Engine
 		void OnUpdate(Timestep ts);
 		void OnEvent(Event& e);
 
+		void SetPosition(const glm::vec3& position) { m_CameraPosition = position; };
+
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& e);
 		bool OnWindowResized(WindowResizeEvent& e);

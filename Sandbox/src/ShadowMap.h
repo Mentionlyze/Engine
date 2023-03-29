@@ -30,7 +30,7 @@ private:
 
 	Engine::Ref<Engine::FrameBuffer> m_FrameBuffer;
 
-	glm::vec3 m_LightPos = glm::vec3(0.0f, 4.0f, -1.0f);
+	glm::vec3 m_LightPos = glm::vec3(-2.0f, 4.0f, -1.0f);
 	glm::vec3 m_LightColor = glm::vec3(1.0);
 
 	glm::mat4 m_BoxTransforms[3] = {
