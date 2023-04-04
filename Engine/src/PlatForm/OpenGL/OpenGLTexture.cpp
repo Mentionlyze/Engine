@@ -161,7 +161,7 @@ namespace Engine
 
 	OpenGLTextureDepthCubMap::OpenGLTextureDepthCubMap(uint32_t width, uint32_t height) : m_Width(width), m_Height(height)
 	{
-		glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_RendererID);
+		glGenTextures(1, &m_RendererID);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
 
 		for (uint32_t i = 0; i < 6; i++) 
@@ -182,6 +182,8 @@ namespace Engine
 	void OpenGLTextureDepthCubMap::Bind(uint32_t slot) const
 	{
 		glBindTextureUnit(m_RendererID, slot);
+
+		//glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
 	}
 
 	void OpenGLTextureDepthCubMap::Unbind() const

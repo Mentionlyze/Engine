@@ -33,17 +33,19 @@ private:
 	glm::vec3 m_LightPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::vec3 m_LightColor = glm::vec3(1.0);
 
-	glm::mat4 m_BoxTransforms[3] = {
-		glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 1.5f, 0.0)),
-		glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 0.0f, 1.0)),
+	glm::mat4 m_BoxTransforms[5] = {
+		glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(4.0f, -3.5f, 0.0)), glm::vec3(0.5f)),
+		glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 3.0f, 1.0)), glm::vec3(0.75f)),
+		glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f, -1.0f, 0.0)), glm::vec3(0.5f)),
+		glm::scale(glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, 1.0f, 1.5f)), glm::vec3(0.5f)),
 
 		glm::scale(
 			glm::rotate(
-				glm::translate(glm::mat4(1.0f), glm::vec3(-1.0f, 0.0f, 2.0)),
-				60.0f,
+				glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, 2.0f, -3.0f)),
+				glm::radians(60.0f),
 				glm::normalize(glm::vec3(1.0, 0.0, 1.0))
 			),
-			glm::vec3(0.5))
+			glm::vec3(0.75f))
 	};
 
 	bool m_Blinn = true;

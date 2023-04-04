@@ -19,13 +19,13 @@ PointLightShadow::PointLightShadow() : Layer("ShadowMap"),
 	m_Shader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/PointShadow.vert", "assets/shaders/PointShadow.frag");
 	m_Shader->Bind();
 
-	m_LightShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/LightCube.vert", "assets/shaders/LightCube.frag");
 	m_DepthShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/PointShadowDepth.vert", "assets/shaders/PointShadowDepth.frag", "assets/shaders/PointShadowDepth.geom");
+	m_LightShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/LightCube.vert", "assets/shaders/LightCube.frag");
 
 	m_FrameBuffer = Engine::FrameBuffer::Create();
 	m_DepthTexture = Engine::TextureDepthCubeMap::Create(2048, 2048);
 
-	m_FrameBuffer->SetTexture(std::dynamic_pointer_cast<Engine::OpenGLTextureDepthCubMap>(m_DepthTexture)->GetRendererID());
+	std::dynamic_pointer_cast<Engine::OpenGLFrameBuffer>(m_FrameBuffer)->SetDepthCubeMapTexture(std::dynamic_pointer_cast<Engine::OpenGLTextureDepthCubMap>(m_DepthTexture)->GetRendererID());
 	m_FrameBuffer->Unbind();
 
 	m_ModelTexture->AddMaterialTexture(m_DepthTexture);
@@ -60,7 +60,7 @@ void PointLightShadow::OnUpdate(Engine::Timestep ts)
 	// render scene from light's point of view
 
 	for (uint32_t i = 0; i < 6; ++i)
-		std::dynamic_pointer_cast<Engine::OpenGLShader>(m_DepthShader)->SetMat4("u_ShadowMatrixes[" + std::to_string(i) + "]", shadowTransforms[i]);
+		std::dynamic_pointer_cast<Engine::OpenGLShader>(m_DepthShader)->SetMat4("u_ShadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
 
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_DepthShader)->SetFloat("u_FarPlane", 25.0f);
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_DepthShader)->SetFloat3("m_LightPos", m_LightPos);
@@ -75,7 +75,7 @@ void PointLightShadow::OnUpdate(Engine::Timestep ts)
 	Engine::RenderCommand::Clear();
 
 	m_Shader->Bind();
-	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_FarPlane", 25.0);
+	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_FarPlane", 25.0f);
 	RenderScene(m_Shader);
 
 	m_LightShader->Bind();
@@ -131,17 +131,21 @@ void PointLightShadow::RenderScene(Engine::Ref<Engine::Shader> shader, bool with
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(shader)->SetFloat3("u_LightPos", m_LightPos);
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(shader)->SetFloat3("u_LightColor", m_LightColor);
 
-	m_BoxGeometry->SetTransform(glm::scale(glm::mat4(1.0f), glm::vec3(5.0f)));
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::scale(model, glm::vec3(10.0f));
+
+	m_BoxGeometry->SetTransform(model);
 	Engine::RenderCommand::DisableCullFace();
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(shader)->SetInt("u_ReverseNormals", 1);
-	m_BoxMesh->Submit(shader, withCamera);
+	m_BoxMesh->Submit(shader);
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(shader)->SetInt("u_ReverseNormals", 0);
 	Engine::RenderCommand::EnableCullFace();
+	//m_PlaneMesh->Submit(m_Shader);
 
-	//for (uint32_t i = 0; i < 3; i++)
-	//{
-	//	m_BoxGeometry->SetTransform(m_BoxTransforms[i]);
-	//	m_BoxMesh->Submit(shader, withCamera);
-	//}
+	for (uint32_t i = 0; i < 5; i++)
+	{
+		m_BoxGeometry->SetTransform(m_BoxTransforms[i]);
+		m_BoxMesh->Submit(shader, withCamera);
+	}
 
 }

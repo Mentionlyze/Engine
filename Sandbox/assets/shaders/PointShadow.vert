@@ -17,11 +17,11 @@ uniform bool u_ReverseNormals;
 
 void main()
 {
-	gl_Position = u_ViewProjection * u_Transform * vec4(a_Pos, 1.0);
 	vs_out.FragPos = vec3(u_Transform * vec4(a_Pos, 1.0));
 	if (u_ReverseNormals)
-		vs_out.Normal = transpose(inverse(mat3(u_Transform))) * (1.0 - a_Normal);
+		vs_out.Normal = transpose(inverse(mat3(u_Transform))) * (-1.0 * a_Normal);
 	else 
 		vs_out.Normal = transpose(inverse(mat3(u_Transform))) * a_Normal;
 	vs_out.TexCoords = a_TexCoords;
+	gl_Position = u_ViewProjection * u_Transform * vec4(a_Pos, 1.0);
 }

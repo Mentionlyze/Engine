@@ -47,6 +47,7 @@ namespace Engine
 
 		virtual void SetTexture(uint32_t textureID) const override;
 
+		virtual void SetDepthCubeMapTexture(uint32_t textureID);
 	private:
 		uint32_t m_RendererID;
 	};

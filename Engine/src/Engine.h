@@ -35,6 +35,7 @@
 #include "PlatForm/OpenGL/PerspectiveCameraController.h"
 #include "PlatForm/OpenGL/OpenGLShader.h"
 #include "PlatForm/OpenGL/OpenGLTexture.h"
+#include "PlatForm/OpenGL/OpenGLBuffer.h"
 #include "PlatForm/OpenGL/OpenGLMesh.h"
 #include "PlatForm/OpenGL/OpenGLModel.h"
 #include "PlatForm/OpenGL/OpenGLPlaneGeometry.h"

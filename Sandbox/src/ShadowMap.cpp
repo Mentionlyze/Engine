@@ -17,7 +17,7 @@ ShadowMap::ShadowMap() : Layer("ShadowMap"),
 	m_Shader->Bind();
 
 	m_LightShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/LightCube.vert", "assets/shaders/LightCube.frag");
-	m_DepthShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/depth.vert", "assets/shaders/depth.frag");
+	m_DepthShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/Depth.vert", "assets/shaders/Depth.frag");
 
 	m_FrameBuffer = Engine::FrameBuffer::Create();
 	m_DepthTexture = Engine::TextureDepthMap::Create(2048, 2048);

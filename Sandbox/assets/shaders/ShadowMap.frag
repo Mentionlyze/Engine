@@ -9,7 +9,7 @@ in VS_OUT {
 } fs_in;
 
 uniform sampler2D texture_diffuse;
-uniform sampler2D shadowMap;
+uniform sampler2D depthMap;
 
 uniform vec3 u_LightPos;
 uniform vec3 u_ViewPosition;
@@ -62,18 +62,18 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
     projCoords = projCoords * 0.5 + 0.5;
 
-    float closetDepth = texture(shadowMap, projCoords.xy).r;
+    float closetDepth = texture(depthMap, projCoords.xy).r;
     float currentDepth = projCoords.z;
 
     float bias = max(0.05 * (1.0 - dot(normalize(fs_in.Normal), lightDir)), 0.005);
 
    float shadow = 0.0;
-    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    vec2 texelSize = 1.0 / textureSize(depthMap, 0);
     for(int x = -1; x <= 1; ++x)
     {
         for(int y = -1; y <= 1; ++y)
         {
-            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r; 
+            float pcfDepth = texture(depthMap, projCoords.xy + vec2(x, y) * texelSize).r; 
             shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;        
         }    
     }
@@ -106,8 +106,8 @@ void main()
     if (u_Gamma)
         lighting = pow(lighting, vec3(1.0 / 2.2));
     
-    FragColor = vec4(lighting, 1.0);
+    //FragColor = vec4(lighting, 1.0);
 
-    float depthValue = texture(shadowMap, fs_in.TexCoords).r;
-    //FragColor = vec4(vec3(depthValue), 1.0);
+    float depthValue = texture(depthMap, fs_in.TexCoords).r;
+    FragColor = vec4(vec3(depthValue), 1.0);
 }

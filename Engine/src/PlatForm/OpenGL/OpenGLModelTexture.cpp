@@ -34,7 +34,7 @@ namespace Engine
 		MaterialTexture modelTexture;
 		
 		modelTexture.Id = std::dynamic_pointer_cast<OpenGLTextureDepthMap>(texture)->GetRendererID();
-		modelTexture.Type = "shadowMap";
+		modelTexture.Type = "depthMap";
 		modelTexture.Path = "";
 		modelTexture.Texture = texture;
 
@@ -46,7 +46,7 @@ namespace Engine
 		MaterialTexture modelTexture;
 		
 		modelTexture.Id = std::dynamic_pointer_cast<OpenGLTextureDepthCubMap>(texture)->GetRendererID();
-		modelTexture.Type = "shadowMap";
+		modelTexture.Type = "depthMap";
 		modelTexture.Path = "";
 		modelTexture.Texture = texture;
 
