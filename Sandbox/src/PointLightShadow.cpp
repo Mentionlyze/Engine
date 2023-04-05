@@ -7,6 +7,10 @@ PointLightShadow::PointLightShadow() : Layer("ShadowMap"),
 	m_CameraController(75.0f, 1.6f / 0.9f, 0.1f, 1000.0f),
 	m_ShadowProjection(glm::perspective(90.0f, 1.0f, 0.1f, 25.0f))
 {
+	Engine::RenderCommand::EnableCullFace();
+	Engine::RenderCommand::DepthClear();
+
+
 	m_CameraController.SetPosition({ 0.0f, 0.0f, 1.0f });
 
 	m_PlaneGeometry = Engine::Geometry::CreatePlane(glm::mat4(1.0f));
@@ -24,9 +28,14 @@ PointLightShadow::PointLightShadow() : Layer("ShadowMap"),
 
 	m_FrameBuffer = Engine::FrameBuffer::Create();
 	m_DepthTexture = Engine::TextureDepthCubeMap::Create(2048, 2048);
+	m_DepthTexture->Bind(1);
 
+	m_FrameBuffer->Bind();
 	std::dynamic_pointer_cast<Engine::OpenGLFrameBuffer>(m_FrameBuffer)->SetDepthCubeMapTexture(std::dynamic_pointer_cast<Engine::OpenGLTextureDepthCubMap>(m_DepthTexture)->GetRendererID());
 	m_FrameBuffer->Unbind();
+
+	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetInt("texture_diffuse", 0);
+	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetInt("depthMap", 1);
 
 	m_ModelTexture->AddMaterialTexture(m_DepthTexture);
 
@@ -45,29 +54,29 @@ void PointLightShadow::OnUpdate(Engine::Timestep ts)
 
 	Engine::Renderer::BeginScene(m_CameraController.GetCamera());
 
-	glm::mat4 lightProjection, lightView;
-	glm::mat4 lightSpaceMatrix;
-
+	float near_plane = 1.0f;
+	float far_plane = 25.0f;
+	glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)2048/ (float)2048, near_plane, far_plane);
 	std::vector<glm::mat4> shadowTransforms;
-	shadowTransforms.push_back(m_ShadowProjection * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-	shadowTransforms.push_back(m_ShadowProjection * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-	shadowTransforms.push_back(m_ShadowProjection * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
-	shadowTransforms.push_back(m_ShadowProjection * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
-	shadowTransforms.push_back(m_ShadowProjection * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
-	shadowTransforms.push_back(m_ShadowProjection * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+	shadowTransforms.push_back(shadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
+
+
+	Engine::RenderCommand::SetViewport(0, 0, m_DepthTexture->GetWidth(), m_DepthTexture->GetHeight());
+	m_FrameBuffer->Bind();
+	Engine::RenderCommand::DepthClear();
 
 	m_DepthShader->Bind();
-	// render scene from light's point of view
-
 	for (uint32_t i = 0; i < 6; ++i)
 		std::dynamic_pointer_cast<Engine::OpenGLShader>(m_DepthShader)->SetMat4("u_ShadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
 
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_DepthShader)->SetFloat("u_FarPlane", 25.0f);
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_DepthShader)->SetFloat3("m_LightPos", m_LightPos);
 
-	Engine::RenderCommand::SetViewport(0, 0, m_DepthTexture->GetWidth(), m_DepthTexture->GetHeight());
-	m_FrameBuffer->Bind();
-	Engine::RenderCommand::DepthClear();
 	RenderScene(m_DepthShader);
 	m_FrameBuffer->Unbind();
 
@@ -76,11 +85,15 @@ void PointLightShadow::OnUpdate(Engine::Timestep ts)
 
 	m_Shader->Bind();
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_FarPlane", 25.0f);
+	glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE1);
+	m_DepthTexture->Bind(1);
+
 	RenderScene(m_Shader);
 
 	m_LightShader->Bind();
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_LightShader)->SetFloat3("u_LightColor", m_LightColor);
-	glm::mat4 transform = glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.3f)), m_LightPos);
+	glm::mat4 transform = glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.1f)), m_LightPos);
 	m_LightGeometry->SetTransform(transform);
 	m_LightMesh->Submit(m_LightShader);
 
@@ -132,7 +145,7 @@ void PointLightShadow::RenderScene(Engine::Ref<Engine::Shader> shader, bool with
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(shader)->SetFloat3("u_LightColor", m_LightColor);
 
 	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::scale(model, glm::vec3(10.0f));
+	model = glm::scale(model, glm::vec3(5.0f));
 
 	m_BoxGeometry->SetTransform(model);
 	Engine::RenderCommand::DisableCullFace();
@@ -141,6 +154,7 @@ void PointLightShadow::RenderScene(Engine::Ref<Engine::Shader> shader, bool with
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(shader)->SetInt("u_ReverseNormals", 0);
 	Engine::RenderCommand::EnableCullFace();
 	//m_PlaneMesh->Submit(m_Shader);
+	m_BoxGeometry->SetTransform(glm::mat4(1.0));
 
 	for (uint32_t i = 0; i < 5; i++)
 	{

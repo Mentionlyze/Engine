@@ -54,7 +54,7 @@ namespace Engine
 
 	OpenGLFrameBuffer::OpenGLFrameBuffer()
 	{
-		glCreateFramebuffers(1, &m_RendererID);
+		glGenFramebuffers(1, &m_RendererID);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 	}
 

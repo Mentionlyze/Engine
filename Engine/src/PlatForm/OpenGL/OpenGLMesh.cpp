@@ -57,6 +57,7 @@ namespace Engine
 				number = std::to_string(heightNr++);
 
 			std::dynamic_pointer_cast<OpenGLShader>(shader)->SetInt((name + number), i);
+			glActiveTexture(GL_TEXTURE0 + i);
 			m_Textures[i].Texture->Bind(i);
 		}
 
@@ -70,6 +71,7 @@ namespace Engine
 		{
 			std::string name = m_Textures[i].Type;
 			std::dynamic_pointer_cast<OpenGLShader>(shader)->SetInt(name, i);
+			glActiveTexture(GL_TEXTURE0 + i);
 			m_Textures[i].Texture->Bind(i);
 		}
 

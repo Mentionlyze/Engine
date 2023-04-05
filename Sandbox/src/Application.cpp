@@ -11,12 +11,14 @@
 #include "BlinnPhong.h"
 #include "ShadowMap.h"
 #include "PointLightShadow.h"
+#include "DepthCubMap.h"
 
 class SandBox : public Engine::Application
 {
 public:
 	SandBox()
 	{
+		//PushLayer(new DepthCubMap());
 		PushLayer(new PointLightShadow());
 	}
 	~SandBox()
