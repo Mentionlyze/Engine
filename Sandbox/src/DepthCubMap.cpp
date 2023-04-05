@@ -1,5 +1,7 @@
 #include "DepthCubMap.h"
+#include <imgui/imgui.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 DepthCubMap::DepthCubMap() : Layer("Depth Test"), m_CameraController(75.0f, 1.6f / 0.9f, 0.1f, 100.0f)
 {
@@ -99,6 +101,7 @@ void DepthCubMap::OnEvent(Engine::Event& e)
 
 void DepthCubMap::OnImGuiRender()
 {
+	ImGui::SliderFloat3("Light Pos", glm::value_ptr(m_LightPos), -20.0f,20.0f);
 }
 
 void DepthCubMap::RenderCube()

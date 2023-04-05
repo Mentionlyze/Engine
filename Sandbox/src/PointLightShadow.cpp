@@ -5,7 +5,7 @@
 
 PointLightShadow::PointLightShadow() : Layer("ShadowMap"),
 	m_CameraController(75.0f, 1.6f / 0.9f, 0.1f, 1000.0f),
-	m_ShadowProjection(glm::perspective(90.0f, 1.0f, 0.1f, 25.0f))
+	m_ShadowProjection(glm::perspective(90.0f, 1.0f, 0.1f, 1000.0f))
 {
 	Engine::RenderCommand::EnableCullFace();
 	Engine::RenderCommand::DepthClear();
@@ -56,7 +56,7 @@ void PointLightShadow::OnUpdate(Engine::Timestep ts)
 
 	float near_plane = 1.0f;
 	float far_plane = 25.0f;
-	glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)2048/ (float)2048, near_plane, far_plane);
+	glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)2048/ (float)2048, near_plane, 1000.0f);
 	std::vector<glm::mat4> shadowTransforms;
 	shadowTransforms.push_back(shadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 	shadowTransforms.push_back(shadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
@@ -126,7 +126,7 @@ void PointLightShadow::OnImGuiRender()
 		m_Gamma = false;
 	}
 
-	ImGui::SliderFloat3("Light Pos", glm::value_ptr(m_LightPos), -10.0f, 10.0f);
+	ImGui::SliderFloat3("Light Pos", glm::value_ptr(m_LightPos), -20.0f,20.0f);
 	ImGui::SliderFloat3("Light Color", glm::value_ptr(m_LightColor), 0.0f, 1.0f);
 
 

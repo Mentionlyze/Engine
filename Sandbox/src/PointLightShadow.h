@@ -52,5 +52,6 @@ private:
 	bool m_Gamma = true;
 
 	glm::mat4 m_ShadowProjection;
+	float m_FarPlane = 1000.0;
 };
 
