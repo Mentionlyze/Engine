@@ -20,6 +20,8 @@ public:
 	{
 		//PushLayer(new DepthCubMap());
 		PushLayer(new PointLightShadow());
+		//PushLayer(new ShadowMap());
+		//PushLayer(new Skybox());
 	}
 	~SandBox()
 	{

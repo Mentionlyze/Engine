@@ -2,10 +2,11 @@
 #include <imgui/imgui.h>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <GLFW/glfw3.h>
 
 PointLightShadow::PointLightShadow() : Layer("ShadowMap"),
 	m_CameraController(75.0f, 1.6f / 0.9f, 0.1f, 1000.0f),
-	m_ShadowProjection(glm::perspective(90.0f, 1.0f, 0.1f, 1000.0f))
+	m_ShadowProjection(glm::perspective(90.0f, 1.0f, 0.1f, 25.0f))
 {
 	Engine::RenderCommand::EnableCullFace();
 	Engine::RenderCommand::DepthClear();
@@ -54,9 +55,11 @@ void PointLightShadow::OnUpdate(Engine::Timestep ts)
 
 	Engine::Renderer::BeginScene(m_CameraController.GetCamera());
 
-	float near_plane = 1.0f;
+	//m_LightPos.z = static_cast<float>(sin(glfwGetTime() * 0.5) * 3.0);
+
+	float near_plane = 0.1f;
 	float far_plane = 25.0f;
-	glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)2048/ (float)2048, near_plane, 1000.0f);
+	glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), (float)2048/ (float)2048, near_plane, far_plane);
 	std::vector<glm::mat4> shadowTransforms;
 	shadowTransforms.push_back(shadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
 	shadowTransforms.push_back(shadowProj * glm::lookAt(m_LightPos, m_LightPos + glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.0f, -1.0f, 0.0f)));
@@ -74,7 +77,7 @@ void PointLightShadow::OnUpdate(Engine::Timestep ts)
 	for (uint32_t i = 0; i < 6; ++i)
 		std::dynamic_pointer_cast<Engine::OpenGLShader>(m_DepthShader)->SetMat4("u_ShadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
 
-	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_DepthShader)->SetFloat("u_FarPlane", 25.0f);
+	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_DepthShader)->SetFloat("u_FarPlane", far_plane);
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_DepthShader)->SetFloat3("m_LightPos", m_LightPos);
 
 	RenderScene(m_DepthShader);
@@ -84,16 +87,13 @@ void PointLightShadow::OnUpdate(Engine::Timestep ts)
 	Engine::RenderCommand::Clear();
 
 	m_Shader->Bind();
-	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_FarPlane", 25.0f);
-	glActiveTexture(GL_TEXTURE0);
-	glActiveTexture(GL_TEXTURE1);
-	m_DepthTexture->Bind(1);
+	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("u_FarPlane", far_plane);
 
 	RenderScene(m_Shader);
 
 	m_LightShader->Bind();
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_LightShader)->SetFloat3("u_LightColor", m_LightColor);
-	glm::mat4 transform = glm::translate(glm::scale(glm::mat4(1.0f), glm::vec3(0.1f)), m_LightPos);
+	glm::mat4 transform = glm::scale(glm::translate(glm::mat4(1.0f), m_LightPos), glm::vec3(0.1f));
 	m_LightGeometry->SetTransform(transform);
 	m_LightMesh->Submit(m_LightShader);
 
