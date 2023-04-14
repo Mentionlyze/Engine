@@ -2,6 +2,7 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include "imgui/imgui.h"
+#include <GLFW/glfw3.h>
 
 NormalMapping::NormalMapping() : Layer("Normal Mapping"),
 	m_CameraController(75.0f, 1.6f / 0.9f, 0.1f, 1000.0f)
@@ -116,7 +117,9 @@ void NormalMapping::OnUpdate(Engine::Timestep ts)
     m_Texutre->Bind();
     m_NormalTexture->Bind(1);
 
-    Engine::Renderer::Submit(m_VertexArray, m_Shader, glm::mat4(1.0f));
+    glm::mat4 model = glm::mat4(1.0);
+    model = glm::rotate(model, (GLfloat)glfwGetTime() * -1, glm::normalize(glm::vec3(1.0, 0.0, 1.0)));
+    Engine::Renderer::Submit(m_VertexArray, m_Shader, model);
 
     Engine::Renderer::EndScene();
 }
