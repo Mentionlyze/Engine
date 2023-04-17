@@ -37,4 +37,9 @@ namespace Engine
 		static Ref<TextureDepthCubeMap> Create(uint32_t width, uint32_t height);
 	};
 
+	class TextureColorBuffer : public Texture
+	{
+	public:
+		static Ref<TextureColorBuffer> Create(uint32_t width, uint32_t height);
+	};
 }

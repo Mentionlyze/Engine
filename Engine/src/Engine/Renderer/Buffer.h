@@ -139,8 +139,18 @@ namespace Engine
 
 		virtual void SetTexture(uint32_t textureID) const = 0;
 
-
 		static Ref<FrameBuffer> Create();
+	};
+
+	class RenderBuffer
+	{
+	public:
+		virtual ~RenderBuffer() = default;
+
+		virtual void Bind() const = 0;
+		virtual void Unbind() const = 0;
+
+		static Ref<RenderBuffer> Create(uint32_t width, uint32_t height);
 	};
 }
 

@@ -48,6 +48,23 @@ namespace Engine
 		virtual void SetTexture(uint32_t textureID) const override;
 
 		virtual void SetDepthCubeMapTexture(uint32_t textureID);
+		virtual void SetRenderBuffer(uint32_t bufferID);
+
+	private:
+		uint32_t m_RendererID;
+	};
+
+	class OpenGLRenderBuffer : public RenderBuffer
+	{
+	public:
+		OpenGLRenderBuffer(uint32_t width, uint32_t height);
+		~OpenGLRenderBuffer();
+
+		virtual void Bind() const override;
+		virtual void Unbind() const override;
+
+		uint32_t GetRendererID() { return m_RendererID; }
+
 	private:
 		uint32_t m_RendererID;
 	};

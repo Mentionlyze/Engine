@@ -82,4 +82,21 @@ namespace Engine
 		uint32_t m_Width, m_Height;
 	};
 
+	class OpenGLTextureColorBuffer : public  TextureColorBuffer
+	{
+	public:
+		OpenGLTextureColorBuffer(uint32_t width, uint32_t height);
+		virtual ~OpenGLTextureColorBuffer();
+
+		virtual uint32_t GetWidth() const override { return m_Width; }
+		virtual uint32_t GetHeight() const override { return m_Height; }
+
+		virtual void Bind(uint32_t slot) const override;
+		virtual void Unbind() const override;
+
+		uint32_t GetRendererID() { return m_RendererID; }
+	private:
+		uint32_t  m_RendererID;
+		uint32_t m_Width, m_Height;
+	};
 }

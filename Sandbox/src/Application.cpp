@@ -13,6 +13,7 @@
 #include "PointLightShadow.h"
 #include "DepthCubMap.h"
 #include "NormalMapping.h"
+#include "HDR.h"
 
 class SandBox : public Engine::Application
 {
@@ -23,7 +24,8 @@ public:
 		//PushLayer(new PointLightShadow());
 		//PushLayer(new ShadowMap());
 		//PushLayer(new Skybox());
-		PushLayer(new NormalMapping());
+		//PushLayer(new NormalMapping());
+		PushLayer(new HDR());
 	}
 	~SandBox()
 	{

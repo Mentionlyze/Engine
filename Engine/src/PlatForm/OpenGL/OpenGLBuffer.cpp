@@ -54,7 +54,7 @@ namespace Engine
 
 	OpenGLFrameBuffer::OpenGLFrameBuffer()
 	{
-		glGenFramebuffers(1, &m_RendererID);
+		glCreateFramebuffers(1, &m_RendererID);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 	}
 
@@ -86,6 +86,34 @@ namespace Engine
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureID, 0);
 		glDrawBuffer(GL_NONE);
 		glReadBuffer(GL_NONE);
+	}
+
+	void OpenGLFrameBuffer::SetRenderBuffer(uint32_t bufferID)
+	{
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, bufferID);
+	}
+
+
+	OpenGLRenderBuffer::OpenGLRenderBuffer(uint32_t width, uint32_t height)
+	{
+		glCreateRenderbuffers(1, &m_RendererID);
+		glBindBuffer(GL_RENDERBUFFER, m_RendererID);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+	}
+
+	OpenGLRenderBuffer::~OpenGLRenderBuffer()
+	{
+		glDeleteRenderbuffers(1, &m_RendererID);
+	}
+
+	void OpenGLRenderBuffer::Bind() const
+	{
+		glBindRenderbuffer(GL_RENDERBUFFER, m_RendererID);
+	}
+
+	void OpenGLRenderBuffer::Unbind() const
+	{
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 
 }

@@ -189,4 +189,30 @@ namespace Engine
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
+	OpenGLTextureColorBuffer::OpenGLTextureColorBuffer(uint32_t width, uint32_t height) : m_Width(width), m_Height(height)
+	{
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
+		glTextureStorage2D(m_RendererID, 0, GL_RGB16F, width, height);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glTextureSubImage2D(m_RendererID, 0, 0, 0, width, height, GL_RGBA, GL_FLOAT, nullptr);
+	}
+
+	OpenGLTextureColorBuffer::~OpenGLTextureColorBuffer()
+	{
+		glDeleteTextures(1, &m_RendererID);
+	}
+
+	void OpenGLTextureColorBuffer::Bind(uint32_t slot) const
+	{
+		glBindTextureUnit(slot, m_RendererID);
+	}
+
+	void OpenGLTextureColorBuffer::Unbind() const
+	{
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
 }

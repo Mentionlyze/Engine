@@ -24,4 +24,8 @@ namespace Engine
 		return CreateRef<OpenGLTextureDepthCubMap>(width, height);
 	}
 
+	Ref<TextureColorBuffer> TextureColorBuffer::Create(uint32_t width, uint32_t height)
+	{
+		return CreateRef<OpenGLTextureColorBuffer>(width, height);
+	}
 }
