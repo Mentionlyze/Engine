@@ -81,6 +81,11 @@ namespace Engine
 		glReadBuffer(GL_NONE);
 	}
 
+	void OpenGLFrameBuffer::SetTexture(uint32_t textureID, uint32_t attachment) const
+	{
+		glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, textureID, 0);
+	}
+
 	void OpenGLFrameBuffer::SetDepthCubeMapTexture(uint32_t textureID)
 	{
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, textureID, 0);

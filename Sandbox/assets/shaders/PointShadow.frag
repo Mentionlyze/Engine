@@ -103,12 +103,12 @@ void main()
     float shadow = ShadowCalculation(fs_in.FragPos);                      
     vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;    
     
-    //FragColor = vec4(lighting, 1.0);
+    FragColor = vec4(lighting, 1.0);
 
 
     vec3 fragToLight = fs_in.FragPos - u_LightPos;
     // ise the fragment to light vector to sample from the depth map    
     float closestDepth = texture(depthMap, fragToLight).r;
 
-    FragColor = vec4(vec3(closestDepth * 25.0 / u_FarPlane), 1.0);
+    //FragColor = vec4(vec3(closestDepth * 25.0 / u_FarPlane), 1.0);
 }

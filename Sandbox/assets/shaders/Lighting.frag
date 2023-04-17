@@ -38,4 +38,5 @@ void main()
                 
     }
     FragColor = vec4(ambient + lighting, 1.0);
+    //FragColor = vec4(lights[0].Color, 1.0);
 }

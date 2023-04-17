@@ -46,6 +46,7 @@ namespace Engine
 		virtual void Unbind() const override;
 
 		virtual void SetTexture(uint32_t textureID) const override;
+		virtual void SetTexture(uint32_t textureID, uint32_t attachment) const override;
 
 		virtual void SetDepthCubeMapTexture(uint32_t textureID);
 		virtual void SetRenderBuffer(uint32_t bufferID);

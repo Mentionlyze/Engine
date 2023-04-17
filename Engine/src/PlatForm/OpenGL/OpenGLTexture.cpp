@@ -191,13 +191,11 @@ namespace Engine
 
 	OpenGLTextureColorBuffer::OpenGLTextureColorBuffer(uint32_t width, uint32_t height) : m_Width(width), m_Height(height)
 	{
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
-		glTextureStorage2D(m_RendererID, 0, GL_RGB16F, width, height);
-
+		glGenTextures(1, &m_RendererID);
+		glBindTexture(GL_TEXTURE_2D, m_RendererID);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		glTextureSubImage2D(m_RendererID, 0, 0, 0, width, height, GL_RGBA, GL_FLOAT, nullptr);
 	}
 
 	OpenGLTextureColorBuffer::~OpenGLTextureColorBuffer()
