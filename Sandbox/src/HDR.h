@@ -28,7 +28,7 @@ private:
 	Engine::Ref<Engine::VertexArray> m_VertexArray;
 
 	bool m_HDR = true;
-	float m_Exposure = 0.5f;
+	float m_Exposure = 5.0f;
 
 	std::vector<glm::vec3> m_LightPositions = {
 		glm::vec3(0.0f, 0.0f, 49.5f),
@@ -42,6 +42,5 @@ private:
 		glm::vec3(0.0f, 0.0f, 0.2f),
 		glm::vec3(0.0f, 0.1f, 0.0f),
 	};
-
 };
 
