@@ -14,6 +14,7 @@
 #include "DepthCubMap.h"
 #include "NormalMapping.h"
 #include "HDR.h"
+#include "Blooming.h"
 
 class SandBox : public Engine::Application
 {
@@ -25,7 +26,8 @@ public:
 		//PushLayer(new ShadowMap());
 		//PushLayer(new Skybox());
 		//PushLayer(new NormalMapping());
-		PushLayer(new HDR());
+		//PushLayer(new HDR());
+		PushLayer(new Blooming());
 	}
 	~SandBox()
 	{
