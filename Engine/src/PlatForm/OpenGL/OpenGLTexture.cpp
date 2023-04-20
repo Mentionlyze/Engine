@@ -191,13 +191,15 @@ namespace Engine
 
 	OpenGLTextureColorBuffer::OpenGLTextureColorBuffer(uint32_t width, uint32_t height) : m_Width(width), m_Height(height)
 	{
-		glGenTextures(1, &m_RendererID);
-		glBindTexture(GL_TEXTURE_2D, m_RendererID);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
+		glTextureStorage2D(m_RendererID, 1, GL_RGB16F, m_Width, m_Height);
+
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);  
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 	}
 
 	OpenGLTextureColorBuffer::~OpenGLTextureColorBuffer()
@@ -208,6 +210,7 @@ namespace Engine
 	void OpenGLTextureColorBuffer::Bind(uint32_t slot) const
 	{
 		glBindTextureUnit(slot, m_RendererID);
+		//glBindTexture(GL_TEXTURE_2D, m_RendererID);
 	}
 
 	void OpenGLTextureColorBuffer::Unbind() const

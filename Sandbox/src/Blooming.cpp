@@ -46,9 +46,12 @@ Blooming::Blooming() : Layer("Blooming"), m_CameraController(75.0f, 1.6f / 0.9f,
 	m_LightShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/BloomBox.vert", "assets/shaders/BloomBox.frag");
 
 	m_BlurShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/Blur.vert", "assets/shaders/Blur.frag");
+	m_BlurShader->Bind();
+	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_BlurShader)->SetInt("image", 0);
 
 	m_BloomShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/BloomFinal.vert", "assets/shaders/BloomFinal.frag");
 
+	m_BloomShader->Bind();
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_BloomShader)->SetInt("scene", 0);
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_BloomShader)->SetInt("bloomBlur", 1);
 
@@ -74,8 +77,8 @@ Blooming::Blooming() : Layer("Blooming"), m_CameraController(75.0f, 1.6f / 0.9f,
 
 	for (uint32_t i = 0; i < 2; ++i)
 	{
-		m_BloomRenderBuffers[i] = Engine::RenderBuffer::Create(1600, 900);
 		m_BloomFrameBuffers[i] = Engine::FrameBuffer::Create();
+		m_BloomRenderBuffers[i] = Engine::RenderBuffer::Create(1600, 900);
 		m_BloomColorBuffers[i] = Engine::TextureColorBuffer::Create(1600, 900);
 		m_BloomFrameBuffers[i]->SetTexture(
 			std::dynamic_pointer_cast<Engine::OpenGLTextureColorBuffer>(m_BloomColorBuffers[i])->GetRendererID(),
@@ -102,6 +105,7 @@ void Blooming::OnUpdate(Engine::Timestep ts)
 	Engine::RenderCommand::Clear();
 
 	m_Shader->Bind();
+
 	for (uint32_t i = 0; i < m_LightPositions.size(); ++i)
 	{
 		std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat3("lights[" + std::to_string(i) + "].Position", m_LightPositions[i]);
@@ -110,8 +114,6 @@ void Blooming::OnUpdate(Engine::Timestep ts)
 
 	m_ContainerMesh->Submit(m_Shader);
 
-
-	m_BoxGeometry->SetTransform(glm::mat4(1.0f));
 
 	for (uint32_t i = 0; i < m_BoxTransforms.size(); ++i)
 	{
@@ -132,29 +134,33 @@ void Blooming::OnUpdate(Engine::Timestep ts)
 	bool horizontal = true, first_iteration = true;
 	uint32_t amount = 10;
 	m_BlurShader->Bind();
+	m_HDRColorBuffers[1]->Bind();
+	m_BloomFrameBuffers[1]->Bind();
+	Engine::Renderer::Submit(m_VertexArray, m_BlurShader, glm::mat4(1.0));
 	for (uint32_t i = 0; i < amount; ++i)
 	{ 
-		uint32_t index = horizontal ? 1 : 0;
+		uint32_t index = i % 2;
 
 		m_BloomFrameBuffers[index]->Bind();
 		std::dynamic_pointer_cast<Engine::OpenGLShader>(m_BlurShader)->SetInt("horizontal", horizontal);
-		if (first_iteration)
-			m_HDRColorBuffers[1]->Bind();
-		else
-			m_BloomColorBuffers[index]->Bind();
-
+		m_BloomColorBuffers[index]->Bind();
+	/*	glBindTexture(
+			GL_TEXTURE_2D,
+			first_iteration ? 
+				std::dynamic_pointer_cast<Engine::OpenGLTextureColorBuffer>(m_HDRColorBuffers[1])->GetRendererID() :
+				std::dynamic_pointer_cast<Engine::OpenGLTextureColorBuffer>(m_BloomColorBuffers[!horizontal])->GetRendererID()
+		);*/
 		Engine::Renderer::Submit(m_VertexArray, m_BlurShader, glm::mat4(1.0));
 		horizontal = !horizontal;
-		if (first_iteration)
-			first_iteration = false;
 	}
 
 	m_HDRFrameBuffer->Unbind();
 	Engine::RenderCommand::Clear();
 
 	m_BloomShader->Bind();
-	m_HDRColorBuffers[0]->Bind();
-	m_BloomColorBuffers[0]->Bind(1);
+	//m_HDRColorBuffers[0]->Bind();
+	m_HDRColorBuffers[1]->Bind();
+	m_BloomColorBuffers[horizontal]->Bind(1);
 
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_BloomShader)->SetInt("bloom", true);
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_BloomShader)->SetFloat("exposure", 1.0);

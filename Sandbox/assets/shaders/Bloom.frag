@@ -1,5 +1,7 @@
 #version 330 core
 
+layout(binding = 0) uniform sampler2D texture_diffuse;
+
 layout(location = 0) out vec4 FragColor;
 layout(location = 1) out vec4 BrightColor;
 
@@ -15,7 +17,6 @@ struct Light {
 };
 
 uniform Light lights[4];
-uniform sampler2D texture_diffuse;
 uniform vec3 u_ViewPosition;
 
 void main()

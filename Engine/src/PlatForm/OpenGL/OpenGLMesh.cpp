@@ -57,12 +57,10 @@ namespace Engine
 				number = std::to_string(heightNr++);
 
 			std::dynamic_pointer_cast<OpenGLShader>(shader)->SetInt((name + number), i);
-			glActiveTexture(GL_TEXTURE0 + i);
 			m_Textures[i].Texture->Bind(i);
 		}
 
 		Renderer::Submit(m_VertexArray, shader, transform, false, withCamera);
-		glActiveTexture(GL_TEXTURE0);
 	}
 
 	void OpenGLMesh::Submit(const Ref<Shader>& shader, bool withCamera) const
@@ -71,11 +69,9 @@ namespace Engine
 		{
 			std::string name = m_Textures[i].Type;
 			std::dynamic_pointer_cast<OpenGLShader>(shader)->SetInt(name, i);
-			glActiveTexture(GL_TEXTURE0 + i);
 			m_Textures[i].Texture->Bind(i);
 		}
 
 		Renderer::Submit(m_Geometry->GetVertextArray(), shader, m_Geometry->GetTransform(), false, withCamera);
-		glActiveTexture(GL_TEXTURE0);
 	}
 }
