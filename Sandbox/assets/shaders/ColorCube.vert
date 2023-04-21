@@ -13,12 +13,11 @@ out VS_OUT {
 uniform mat4 u_ViewProjection;
 uniform mat4 u_Transform;
 
-void main() 
+void main()
 {
 	gl_Position = u_ViewProjection * u_Transform * vec4(a_Pos, 1.0);
-
+	
 	vs_out.FragPos = vec3(u_Transform * vec4(a_Pos, 1.0));
-	mat3 transformMatrix = transpose(inverse(mat3(u_Transform)));
-	vs_out.Normal = normalize(transformMatrix * a_Normal);
+	vs_out.Normal = transpose(inverse(mat3(u_Transform))) * a_Normal;
 	vs_out.TexCoords = a_TexCoords;
 }

@@ -15,6 +15,7 @@
 #include "NormalMapping.h"
 #include "HDR.h"
 #include "Blooming.h"
+#include "FrameBuffer.h"
 
 class SandBox : public Engine::Application
 {
@@ -28,6 +29,7 @@ public:
 		//PushLayer(new NormalMapping());
 		//PushLayer(new HDR());
 		PushLayer(new Blooming());
+		//PushLayer(new FrameBuffer());
 	}
 	~SandBox()
 	{

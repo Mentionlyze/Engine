@@ -62,5 +62,8 @@ private:
 	};
 
 	Engine::Ref<Engine::VertexArray> m_VertexArray;
+
+	bool m_Bloom = true;
+	float m_Exposure = 0.6;
 };
 

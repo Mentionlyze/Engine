@@ -1,4 +1,5 @@
 #include "Blooming.h"
+#include "imgui/imgui.h"
 
 Blooming::Blooming() : Layer("Blooming"), m_CameraController(75.0f, 1.6f / 0.9f, 0.1f, 1000.0f)
 {
@@ -38,8 +39,6 @@ Blooming::Blooming() : Layer("Blooming"), m_CameraController(75.0f, 1.6f / 0.9f,
 	};
 	auto indexBuffer = Engine::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
 	m_VertexArray->SetIndexBuffer(indexBuffer);
-
-	
 
 	m_Shader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/Bloom.vert", "assets/shaders/Bloom.frag");
 
@@ -88,6 +87,7 @@ Blooming::Blooming() : Layer("Blooming"), m_CameraController(75.0f, 1.6f / 0.9f,
 			std::dynamic_pointer_cast<Engine::OpenGLRenderBuffer>(m_BloomRenderBuffers[i])->GetRendererID()
 		);
 	}
+	//glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
 	m_HDRFrameBuffer->Unbind();
 }
@@ -129,41 +129,38 @@ void Blooming::OnUpdate(Engine::Timestep ts)
 		m_BoxMesh->Submit(m_LightShader);
 	}
 
-	m_HDRFrameBuffer->Unbind();
+	//m_HDRFrameBuffer->Unbind();
 
-	bool horizontal = true, first_iteration = true;
-	uint32_t amount = 10;
 	m_BlurShader->Bind();
-	m_HDRColorBuffers[1]->Bind();
 	m_BloomFrameBuffers[1]->Bind();
+	Engine::RenderCommand::Clear();
+	m_HDRColorBuffers[1]->Bind();
 	Engine::Renderer::Submit(m_VertexArray, m_BlurShader, glm::mat4(1.0));
-	for (uint32_t i = 0; i < amount; ++i)
-	{ 
-		uint32_t index = i % 2;
 
+	bool horizontal = true;
+	uint32_t amount = 10;
+
+	for (uint32_t i = 0; i < amount; i++)
+	{
+		uint32_t index = i % 2;
 		m_BloomFrameBuffers[index]->Bind();
+		//Engine::RenderCommand::Clear();
 		std::dynamic_pointer_cast<Engine::OpenGLShader>(m_BlurShader)->SetInt("horizontal", horizontal);
-		m_BloomColorBuffers[index]->Bind();
-	/*	glBindTexture(
-			GL_TEXTURE_2D,
-			first_iteration ? 
-				std::dynamic_pointer_cast<Engine::OpenGLTextureColorBuffer>(m_HDRColorBuffers[1])->GetRendererID() :
-				std::dynamic_pointer_cast<Engine::OpenGLTextureColorBuffer>(m_BloomColorBuffers[!horizontal])->GetRendererID()
-		);*/
 		Engine::Renderer::Submit(m_VertexArray, m_BlurShader, glm::mat4(1.0));
+		m_BloomColorBuffers[index]->Bind();
 		horizontal = !horizontal;
 	}
 
 	m_HDRFrameBuffer->Unbind();
+
 	Engine::RenderCommand::Clear();
 
 	m_BloomShader->Bind();
-	//m_HDRColorBuffers[0]->Bind();
-	m_HDRColorBuffers[1]->Bind();
-	m_BloomColorBuffers[horizontal]->Bind(1);
+	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_BloomShader)->SetInt("bloom", m_Bloom);
+	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_BloomShader)->SetFloat("exposure", m_Exposure);
 
-	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_BloomShader)->SetInt("bloom", true);
-	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_BloomShader)->SetFloat("exposure", 1.0);
+	m_HDRColorBuffers[0]->Bind();
+	m_BloomColorBuffers[1]->Bind(1);
 
 	Engine::Renderer::Submit(m_VertexArray, m_BloomShader, glm::mat4(1.0));
 
@@ -172,8 +169,19 @@ void Blooming::OnUpdate(Engine::Timestep ts)
 
 void Blooming::OnEvent(Engine::Event& e)
 {
+	
 }
 
 void Blooming::OnImGuiRender()
 {
+	ImGui::Begin("Blooming");
+	if (ImGui::Button("enable bloom"))
+		m_Bloom = true;
+
+	if (ImGui::Button("disable bloom"))
+		m_Bloom = false;
+
+	ImGui::SliderFloat("exposure", &m_Exposure, 0.0, 10.0f);
+
+	ImGui::End();
 }
