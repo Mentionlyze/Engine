@@ -16,5 +16,6 @@ namespace Engine
 		
 		static Ref<Geometry> CreateBox(const glm::mat4& transform);
 		static Ref<Geometry> CreatePlane(const glm::mat4& transform);
+		static Ref<Geometry> CreateSphere(const glm::mat4& transform);
 	};
 }

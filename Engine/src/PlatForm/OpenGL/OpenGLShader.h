@@ -22,12 +22,14 @@ namespace Engine
 		void SetFloat(const std::string& name, float value);
 		void SetInt(const std::string& name, uint32_t value);
 		void SetFloat3(const std::string& name, const glm::vec3& value);
+		void SetMat3(const std::string& name, const glm::mat3& value);
 		void SetMat4(const std::string& name, const glm::mat4& value);
 
 		void SetFloat3fv(const std::string& name, uint32_t count, const glm::vec3& value);
 		
 		void UpdateFloat3(const std::string& name, const glm::vec3& value);
 		void UpdateFloat3fv(const std::string& name, uint32_t count, const glm::vec3& value);
+		void UpdateUniformMat3(const std::string& name, const glm::mat3& matrix);
 		void UpdateUniformMat4(const std::string& name, const glm::mat4& matrix);
 
 	private:

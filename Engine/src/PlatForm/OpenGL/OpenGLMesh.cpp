@@ -74,4 +74,16 @@ namespace Engine
 
 		Renderer::Submit(m_Geometry->GetVertextArray(), shader, m_Geometry->GetTransform(), false, withCamera);
 	}
+
+	void OpenGLMesh::SubmitStrip(const Ref<Shader>& shader, bool withCamera) const
+	{
+		for (uint32_t i = 0; i < m_Textures.size(); i++)
+		{
+			std::string name = m_Textures[i].Type;
+			std::dynamic_pointer_cast<OpenGLShader>(shader)->SetInt(name, i);
+			m_Textures[i].Texture->Bind(i);
+		}
+
+		Renderer::SubmitStrip(m_Geometry->GetVertextArray(), shader, m_Geometry->GetTransform(), false, withCamera);
+	}
 }

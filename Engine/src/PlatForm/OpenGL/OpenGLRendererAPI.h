@@ -15,6 +15,7 @@ namespace Engine
 		virtual void EnableCullFace() override;
 		virtual void DisableCullFace() override;
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray) override;
+		virtual void DrawIndexedStrip(const Ref<VertexArray>& vertexArray) override;
 		virtual void DrawElementInstanced(GLenum mode, uint32_t count, uint32_t amount) override;
 	};
 }

@@ -28,6 +28,7 @@ namespace Engine
 		virtual void DisableCullFace() = 0;
 
 		virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray) = 0;
+		virtual void DrawIndexedStrip(const std::shared_ptr<VertexArray>& vertexArray) = 0;
 		virtual void DrawElementInstanced(GLenum mode, uint32_t count, uint32_t amount) = 0;
 
 	private:

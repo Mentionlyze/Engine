@@ -48,6 +48,11 @@ namespace Engine
 			s_RendererAPI->DrawIndexed(vertexArray);
 		}
 
+		inline static void DrawIndexedStrip(const Ref<VertexArray>& vertexArray)
+		{
+			s_RendererAPI->DrawIndexedStrip(vertexArray);
+		}
+
 		inline static void DrawElementInstanced(GLenum mode, uint32_t count, uint32_t amount)
 		{
 			s_RendererAPI->DrawElementInstanced(mode, count, amount);

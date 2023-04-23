@@ -2,6 +2,7 @@
 #include "Geometry.h"
 #include "PlatForm/OpenGL/OpenGLBoxGeometry.h"
 #include "PlatForm/OpenGL/OpenGLPlaneGeometry.h"
+#include "PlatForm/OpenGL/OpenGLSphereGeometry.h"
 
 namespace Engine {
 
@@ -13,6 +14,11 @@ namespace Engine {
 	Ref<Geometry> Geometry::CreatePlane(const glm::mat4& transform)
 	{
 		return CreateRef<OpenGLPlaneGeometry>(transform);
+	}
+
+	Ref<Geometry> Geometry::CreateSphere(const glm::mat4& transform)
+	{
+		return CreateRef<OpenGLSphereGeometry>(transform);
 	}
 }
 

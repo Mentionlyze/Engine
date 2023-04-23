@@ -21,6 +21,7 @@ namespace Engine
 
 		void Submit(const Ref<Shader>& shader, const glm::mat4& transform, bool withCamera) const override;
 		void Submit(const Ref<Shader>& shader, bool withCamera) const override;
+		void SubmitStrip(const Ref<Shader>& shader, bool withCamera = true) const override;
 
 	private:
 		Ref<VertexArray> m_VertexArray;

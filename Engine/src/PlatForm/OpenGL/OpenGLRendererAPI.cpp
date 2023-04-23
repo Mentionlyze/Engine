@@ -57,6 +57,11 @@ namespace Engine
 		glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
+	void OpenGLRendererAPI::DrawIndexedStrip(const Ref<VertexArray>& vertexArray)
+	{
+		glDrawElements(GL_TRIANGLE_STRIP, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+	}
+
 	void OpenGLRendererAPI::DrawElementInstanced(GLenum mode, uint32_t count, uint32_t amount)
 	{
 		glDrawElementsInstanced(mode, count, GL_UNSIGNED_BYTE, 0, amount);
