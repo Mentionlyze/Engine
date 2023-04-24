@@ -17,13 +17,16 @@
 #include "Blooming.h"
 #include "FrameBuffer.h"
 #include "PBR.h"
+#include "PBR_Diffuse.h"
 
 class SandBox : public Engine::Application
 {
 public:
 	SandBox()
 	{
+		//PushLayer(new Sandbox3D());
 		//PushLayer(new DepthCubMap());
+		//PushLayer(new DepthStencil());
 		//PushLayer(new PointLightShadow());
 		//PushLayer(new ShadowMap());
 		//PushLayer(new Skybox());
@@ -31,7 +34,8 @@ public:
 		//PushLayer(new HDR());
 		//PushLayer(new Blooming());
 		//PushLayer(new FrameBuffer());
-		PushLayer(new PBR());
+		//PushLayer(new PBR());
+		PushLayer(new PBR_Diffuse());
 	}
 	~SandBox()
 	{

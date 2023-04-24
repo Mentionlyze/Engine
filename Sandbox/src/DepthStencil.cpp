@@ -124,8 +124,8 @@ DepthStencil::DepthStencil() : Layer("Depth Stencil"),
     m_TransparentVertexArray->SetIndexBuffer(transparentIndexBuffer);
     
     m_TransparentShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/Blending.vert", "assets/shaders/Blending.frag");
-    //m_TransparentTexture = Engine::Texture2D::Create("assets/textures/grass.png");
-    m_TransparentTexture = Engine::Texture2D::Create("assets/textures/blending_transparent_window.png");
+    m_TransparentTexture = Engine::Texture2D::Create("assets/textures/grass.png");
+    //m_TransparentTexture = Engine::Texture2D::Create("assets/textures/blending_transparent_window.png");
 }
 
 void DepthStencil::OnUpdate(Engine::Timestep ts)

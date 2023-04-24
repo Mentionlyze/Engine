@@ -17,6 +17,7 @@ namespace Engine
 		void AddMaterialTexture(const std::string& path, const std::string& name, bool gammaCorrection = false) override;
 		void AddMaterialTexture(const Ref<TextureDepthMap> texture) override;
 		void AddMaterialTexture(const Ref<TextureDepthCubeMap> texture) override;
+		void AddMaterialTextureHDR(const std::string& path, const std::string& name) override;
 	};
 }
 

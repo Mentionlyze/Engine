@@ -28,4 +28,8 @@ namespace Engine
 	{
 		return CreateRef<OpenGLTextureColorBuffer>(width, height);
 	}
+	Ref<TextureHDR> TextureHDR::Create(const std::string& path)
+	{
+		return CreateRef<OpenGLTextureHDR>(path);
+	}
 }

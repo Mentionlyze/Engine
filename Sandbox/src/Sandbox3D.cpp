@@ -68,7 +68,8 @@ Sandbox3D::Sandbox3D() : Layer("Sandbox3D"),
 
 
     m_Shader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/Geometry.vert", "assets/shaders/Geometry.frag");
-	m_Texture = Engine::Texture2D::Create("assets/textures/container2.png");
+	m_Texture = Engine::Texture2D::Create("assets/textures/pbr/metallic.png");
+	//m_Texture = Engine::Texture2D::Create("assets/textures/container2.png");
 	m_SpecularTexture = Engine::Texture2D::Create("assets/textures/container2_specular.png");
 
     m_Shader->Bind();

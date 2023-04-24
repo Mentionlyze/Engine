@@ -62,4 +62,18 @@ namespace Engine
 		m_Texuters.push_back(modelTexture);
 	}
 
+	void OpenGLModelTexture::AddMaterialTextureHDR(const std::string& path, const std::string& name)
+	{
+		MaterialTexture modelTexture;
+
+		auto texture = Engine::TextureHDR::Create(path);
+
+		modelTexture.Id = std::dynamic_pointer_cast<OpenGLTextureHDR>(texture)->GetRendererID();
+		modelTexture.Type = name;
+		modelTexture.Path = path;
+		modelTexture.Texture = texture;
+
+		m_Texuters.push_back(modelTexture);
+	}
+
 }
