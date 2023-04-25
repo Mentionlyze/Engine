@@ -99,11 +99,11 @@ namespace Engine
 	}
 
 
-	OpenGLRenderBuffer::OpenGLRenderBuffer(uint32_t width, uint32_t height)
+	OpenGLRenderBuffer::OpenGLRenderBuffer(uint32_t width, uint32_t height, uint32_t type)
 	{
 		glCreateRenderbuffers(1, &m_RendererID);
 		glBindRenderbuffer(GL_RENDERBUFFER, m_RendererID);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+		glRenderbufferStorage(GL_RENDERBUFFER, type, width, height);
 	}
 
 	OpenGLRenderBuffer::~OpenGLRenderBuffer()

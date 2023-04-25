@@ -18,7 +18,12 @@ private:
 	Engine::Ref<Engine::Mesh> m_SphereMesh;
 
 	Engine::Ref<Engine::Shader> m_Shader;
+	Engine::Ref<Engine::Shader> m_EquirectangularToCubeMapShader;
+	Engine::Ref<Engine::Shader> m_BackgroundShader;
 	Engine::Ref<Engine::ModelTexture> m_ModelTexture;
+
+	Engine::Ref<Engine::FrameBuffer> m_FrameBuffer;
+	Engine::Ref<Engine::RenderBuffer> m_RenderBuffer;
 
 	Engine::Ref<Engine::Texture2D> m_AlbedoTexture;
 	Engine::Ref<Engine::Texture2D> m_NormalTexture;

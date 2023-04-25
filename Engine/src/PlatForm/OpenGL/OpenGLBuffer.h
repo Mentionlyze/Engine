@@ -58,7 +58,7 @@ namespace Engine
 	class OpenGLRenderBuffer : public RenderBuffer
 	{
 	public:
-		OpenGLRenderBuffer(uint32_t width, uint32_t height);
+		OpenGLRenderBuffer(uint32_t width, uint32_t height, uint32_t type);
 		~OpenGLRenderBuffer();
 
 		virtual void Bind() const override;

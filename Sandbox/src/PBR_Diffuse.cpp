@@ -8,6 +8,11 @@ PBR_Diffuse::PBR_Diffuse() : Layer("PBR Diffuse"), m_CameraController(75.0f, 1.6
 	m_SphereMesh = Engine::Mesh::Create(m_SphereGeometry, {});
 	
 	m_Shader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/PBR.vert", "assets/shaders/PBR.frag");
+	m_EquirectangularToCubeMapShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/CubeMap.vert", "assets/shaders/EquirectangularCubeMap.frag");
+	
+	m_FrameBuffer = Engine::FrameBuffer::Create();
+	m_RenderBuffer = Engine::RenderBuffer::Create(1024, 1024, GL_DEPTH_COMPONENT24);
+
 	m_Shader->Bind();
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat3("albedo", glm::vec3(0.5f, 0.0f, 0.0f));
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("ao", 1.0f);
