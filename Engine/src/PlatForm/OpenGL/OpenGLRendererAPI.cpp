@@ -50,6 +50,10 @@ namespace Engine
 		glDisable(GL_CULL_FACE);
 	}
 
+	void OpenGLRendererAPI::EnableCubeMapSeamless()
+	{
+		glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+	}
 
 
 	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray)

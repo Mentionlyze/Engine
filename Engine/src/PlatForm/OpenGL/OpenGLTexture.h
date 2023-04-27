@@ -67,6 +67,7 @@ namespace Engine
 	{
 	public:
 		OpenGLTextureCubeMap(const std::vector<std::string>& faces);
+		OpenGLTextureCubeMap(uint32_t width, uint32_t height);
 		virtual ~OpenGLTextureCubeMap();
 
 		virtual uint32_t GetWidth() const override { return m_Width; }
@@ -105,7 +106,7 @@ namespace Engine
 	class OpenGLTextureColorBuffer : public  TextureColorBuffer
 	{
 	public:
-		OpenGLTextureColorBuffer(uint32_t width, uint32_t height);
+		OpenGLTextureColorBuffer(uint32_t width, uint32_t height, uint32_t format, uint32_t type);
 		virtual ~OpenGLTextureColorBuffer();
 
 		virtual uint32_t GetWidth() const override { return m_Width; }

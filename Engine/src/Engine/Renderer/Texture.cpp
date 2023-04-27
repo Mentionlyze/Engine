@@ -19,15 +19,21 @@ namespace Engine
 		return CreateRef<OpenGLTextureCubeMap>(faces);
 	}
 
+	Ref<TextureCubeMap> TextureCubeMap::CreateEnvMap(uint32_t width, uint32_t height)
+	{
+		return CreateRef<OpenGLTextureCubeMap>(width, height);
+	}
+
 	Ref<TextureDepthCubeMap> TextureDepthCubeMap::Create(uint32_t width, uint32_t height)
 	{
 		return CreateRef<OpenGLTextureDepthCubMap>(width, height);
 	}
 
-	Ref<TextureColorBuffer> TextureColorBuffer::Create(uint32_t width, uint32_t height)
+	Ref<TextureColorBuffer> TextureColorBuffer::Create(uint32_t width, uint32_t height, uint32_t format, uint32_t type)
 	{
-		return CreateRef<OpenGLTextureColorBuffer>(width, height);
+		return CreateRef<OpenGLTextureColorBuffer>(width, height, format, type);
 	}
+
 	Ref<TextureHDR> TextureHDR::Create(const std::string& path)
 	{
 		return CreateRef<OpenGLTextureHDR>(path);

@@ -1,4 +1,5 @@
 #pragma once
+#include <glad/glad.h>
 
 namespace Engine
 {
@@ -36,6 +37,7 @@ namespace Engine
 	{
 	public:
 		static Ref<TextureCubeMap> Create(const std::vector<std::string>& faces);
+		static Ref<TextureCubeMap> CreateEnvMap(uint32_t width, uint32_t height);
 	};
 
 	class TextureDepthCubeMap : public Texture
@@ -47,6 +49,6 @@ namespace Engine
 	class TextureColorBuffer : public Texture
 	{
 	public:
-		static Ref<TextureColorBuffer> Create(uint32_t width, uint32_t height);
+		static Ref<TextureColorBuffer> Create(uint32_t width, uint32_t height, uint32_t format = GL_RGBA, uint32_t type = GL_FLOAT);
 	};
 }

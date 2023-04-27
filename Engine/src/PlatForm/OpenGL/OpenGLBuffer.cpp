@@ -81,9 +81,9 @@ namespace Engine
 		glReadBuffer(GL_NONE);
 	}
 
-	void OpenGLFrameBuffer::SetTexture(uint32_t textureID, uint32_t attachment) const
+	void OpenGLFrameBuffer::SetTexture(uint32_t textureID, uint32_t attachment, uint32_t textTarget, uint32_t level) const
 	{
-		glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, textureID, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, textTarget, textureID, level);
 	}
 
 	void OpenGLFrameBuffer::SetDepthCubeMapTexture(uint32_t textureID)
@@ -93,17 +93,17 @@ namespace Engine
 		glReadBuffer(GL_NONE);
 	}
 
-	void OpenGLFrameBuffer::SetRenderBuffer(uint32_t bufferID)
+	void OpenGLFrameBuffer::SetRenderBuffer(uint32_t bufferID) const
 	{
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, bufferID);
 	}
 
 
-	OpenGLRenderBuffer::OpenGLRenderBuffer(uint32_t width, uint32_t height, uint32_t type)
+	OpenGLRenderBuffer::OpenGLRenderBuffer(uint32_t width, uint32_t height, uint32_t internalFormat)
 	{
 		glCreateRenderbuffers(1, &m_RendererID);
 		glBindRenderbuffer(GL_RENDERBUFFER, m_RendererID);
-		glRenderbufferStorage(GL_RENDERBUFFER, type, width, height);
+		glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, width, height);
 	}
 
 	OpenGLRenderBuffer::~OpenGLRenderBuffer()

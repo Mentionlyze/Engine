@@ -140,7 +140,8 @@ namespace Engine
 		virtual void Unbind() const = 0;
 
 		virtual void SetTexture(uint32_t textureID) const = 0;
-		virtual void SetTexture(uint32_t textureID, uint32_t attachment) const = 0;
+		virtual void SetTexture(uint32_t textureID, uint32_t attachment, uint32_t textTarget = GL_TEXTURE_2D, uint32_t level = 0) const = 0;
+		virtual void SetRenderBuffer(uint32_t bufferID) const = 0;
 
 		static Ref<FrameBuffer> Create();
 	};
@@ -153,7 +154,7 @@ namespace Engine
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 
-		static Ref<RenderBuffer> Create(uint32_t width, uint32_t height, uint32_t type = GL_DEPTH_ATTACHMENT);
+		static Ref<RenderBuffer> Create(uint32_t width, uint32_t height, uint32_t internalFormat = GL_DEPTH_ATTACHMENT);
 	};
 }
 

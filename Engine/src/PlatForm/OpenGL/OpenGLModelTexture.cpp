@@ -38,6 +38,18 @@ namespace Engine
 		m_Texuters.push_back(modelTexture);
 	}
 
+	void OpenGLModelTexture::AddMaterialTexture(const Ref<TextureColorBuffer> texture, const std::string& type)
+	{
+		MaterialTexture modelTexture;
+		
+		modelTexture.Id = std::dynamic_pointer_cast<OpenGLTextureColorBuffer>(texture)->GetRendererID();
+		modelTexture.Type = type;
+		modelTexture.Path = "";
+		modelTexture.Texture = texture;
+
+		m_Texuters.push_back(modelTexture);
+	}
+
 	void OpenGLModelTexture::AddMaterialTexture(const Ref<TextureDepthMap> texture)
 	{
 		MaterialTexture modelTexture;
@@ -49,6 +61,19 @@ namespace Engine
 
 		m_Texuters.push_back(modelTexture);
 	}
+
+	void OpenGLModelTexture::AddMaterialTexture(const Ref<TextureCubeMap> texture, const std::string& type)
+	{
+		MaterialTexture modelTexture;
+		
+		modelTexture.Id = std::dynamic_pointer_cast<OpenGLTextureCubeMap>(texture)->GetRendererID();
+		modelTexture.Type = type;
+		modelTexture.Path = "";
+		modelTexture.Texture = texture;
+
+		m_Texuters.push_back(modelTexture);
+	}
+
 
 	void OpenGLModelTexture::AddMaterialTexture(const Ref<TextureDepthCubeMap> texture)
 	{

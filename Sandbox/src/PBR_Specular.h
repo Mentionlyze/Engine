@@ -2,10 +2,10 @@
 
 #include "Engine.h"
 
-class PBR_Diffuse : public Engine::Layer
+class PBR_Specular: public Engine::Layer
 {
 public:
-	PBR_Diffuse();
+	PBR_Specular();
 
 	void OnUpdate(Engine::Timestep ts) override;
 	void OnEvent(Engine::Event& e) override;
@@ -16,6 +16,7 @@ private:
 
 	Engine::Ref<Engine::Geometry> m_SphereGeometry;
 	Engine::Ref<Engine::Mesh> m_SphereMesh;
+	Engine::Ref<Engine::ModelTexture> m_SphereTextures;
 	Engine::Ref<Engine::Shader> m_Shader;
 
 	Engine::Ref<Engine::Texture2D> m_AlbedoTexture;
@@ -33,11 +34,22 @@ private:
 	Engine::Ref<Engine::RenderBuffer> m_RenderBuffer;
 	Engine::Ref<Engine::TextureCubeMap> m_TextureEnvCubMap;
 
-	Engine::Ref<Engine::FrameBuffer> m_IrradianceFrameBuffer;
 	Engine::Ref<Engine::RenderBuffer> m_IrradianceRenderBuffer;
 	Engine::Ref<Engine::TextureCubeMap> m_IrradianceTextureEnvCubMap;
 
 	Engine::Ref<Engine::Shader> m_IrradianceShader;
+
+	Engine::Ref<Engine::RenderBuffer> m_PrefilterRenderBuffer;
+	Engine::Ref<Engine::TextureCubeMap> m_PrefilterTextureEnvCubMap;
+
+	Engine::Ref<Engine::Shader> m_PrefilterShader;
+
+	Engine::Ref<Engine::TextureColorBuffer> m_BRDFColorBuffer;
+	Engine::Ref<Engine::RenderBuffer> m_BRDFRenderBuffer;
+
+	Engine::Ref<Engine::Shader> m_BRDFShader;
+
+	Engine::Ref<Engine::VertexArray> m_VertexArray;
 
 	Engine::Ref<Engine::Shader> m_BackgroundShader;
 
@@ -70,4 +82,5 @@ private:
 	float spacing = 2.5;
 
 };
+
 

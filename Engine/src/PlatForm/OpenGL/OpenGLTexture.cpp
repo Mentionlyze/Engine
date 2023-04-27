@@ -225,6 +225,21 @@ namespace Engine
 
 	}
 
+	OpenGLTextureCubeMap::OpenGLTextureCubeMap(uint32_t width, uint32_t height) : m_Width(width), m_Height(height)
+	{
+		glGenTextures(1, &m_RendererId);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererId);
+		for (uint32_t i = 0; i < 6; ++i)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA16F, width, height, 0, GL_RGB, GL_FLOAT, nullptr);
+		}
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
+
 	OpenGLTextureCubeMap::~OpenGLTextureCubeMap()
 	{
 		glDeleteTextures(1, &m_RendererId);
@@ -232,7 +247,8 @@ namespace Engine
 
 	void OpenGLTextureCubeMap::Bind(uint32_t slot) const
 	{
-		glBindTextureUnit(m_RendererId, slot);
+		glActiveTexture(slot);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererId);
 	}
 
 	void OpenGLTextureCubeMap::Unbind() const
@@ -263,6 +279,7 @@ namespace Engine
 	void OpenGLTextureDepthCubMap::Bind(uint32_t slot) const
 	{
 		//glBindTextureUnit(m_RendererID, slot);
+		glActiveTexture(slot);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
 	}
 
@@ -271,17 +288,18 @@ namespace Engine
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 	}
 
-	OpenGLTextureColorBuffer::OpenGLTextureColorBuffer(uint32_t width, uint32_t height) : m_Width(width), m_Height(height)
+	OpenGLTextureColorBuffer::OpenGLTextureColorBuffer(uint32_t width, uint32_t height, uint32_t format, uint32_t type) : m_Width(width), m_Height(height)
 	{
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
+		glGenTextures(1, &m_RendererID);
+		glBindTexture(GL_TEXTURE_2D, m_RendererID);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, 512, 512, 0, format, type, 0);
 		glTextureStorage2D(m_RendererID, 1, GL_RGB16F, m_Width, m_Height);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);  
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 	}
 
 	OpenGLTextureColorBuffer::~OpenGLTextureColorBuffer()

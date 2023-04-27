@@ -21,8 +21,8 @@ namespace Engine
 		return CreateRef<OpenGLFrameBuffer>();
 	}
 
-	Ref<RenderBuffer> RenderBuffer::Create(uint32_t width, uint32_t height, uint32_t type)
+	Ref<RenderBuffer> RenderBuffer::Create(uint32_t width, uint32_t height, uint32_t internalFormat)
 	{
-		return CreateRef<OpenGLRenderBuffer>(width, height, type);
+		return CreateRef<OpenGLRenderBuffer>(width, height, internalFormat);
 	}
 }

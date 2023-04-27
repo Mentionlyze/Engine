@@ -14,6 +14,9 @@ namespace Engine
 		virtual void DepthClear() override;
 		virtual void EnableCullFace() override;
 		virtual void DisableCullFace() override;
+
+		virtual void EnableCubeMapSeamless() override;
+
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray) override;
 		virtual void DrawIndexedStrip(const Ref<VertexArray>& vertexArray) override;
 		virtual void DrawElementInstanced(GLenum mode, uint32_t count, uint32_t amount) override;

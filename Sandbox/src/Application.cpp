@@ -18,6 +18,7 @@
 #include "FrameBuffer.h"
 #include "PBR.h"
 #include "PBR_Diffuse.h"
+#include "PBR_Specular.h"
 
 class SandBox : public Engine::Application
 {
@@ -35,7 +36,8 @@ public:
 		//PushLayer(new Blooming());
 		//PushLayer(new FrameBuffer());
 		//PushLayer(new PBR());
-		PushLayer(new PBR_Diffuse());
+		//PushLayer(new PBR_Diffuse());
+		PushLayer(new PBR_Specular());
 	}
 	~SandBox()
 	{

@@ -38,11 +38,11 @@ namespace Engine
 		std::unordered_map<GLenum, std::string> shaderSources = Preprocess(vertextShaderSource, fragmentShaderSource, geometryShaderSource);
 		Compile(shaderSources);
 
-		auto lastSlash = vertexSrcPath.find_last_of("/\\");
+		auto lastSlash = fragmentSrcPath.find_last_of("/\\");
 		lastSlash = lastSlash == std::string::npos ? 0 : lastSlash + 1;
-		auto lastDot = vertexSrcPath.rfind('.');
-		auto count = lastDot == std::string::npos ? vertexSrcPath.size() - lastSlash : lastDot - lastSlash;
-		m_Name = vertexSrcPath.substr(lastSlash, count);
+		auto lastDot = fragmentSrcPath.rfind('.');
+		auto count = lastDot == std::string::npos ? fragmentSrcPath.size() - lastSlash : lastDot - lastSlash;
+		m_Name = fragmentSrcPath.substr(lastSlash, count);
 	}
 
 	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource, const std::string& geometrySource): m_Name(name)

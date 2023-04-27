@@ -10,7 +10,9 @@ namespace Engine
 		virtual ~ModelTexture() = default;
 
 		virtual void AddMaterialTexture(const std::string& path, const std::string& name, bool gammaCorrection = false) = 0;
+		virtual void AddMaterialTexture(const Ref<TextureColorBuffer> texture, const std::string& type = "colorMap") = 0;
 		virtual void AddMaterialTexture(const Ref<TextureDepthMap> texture) = 0;
+		virtual void AddMaterialTexture(const Ref<TextureCubeMap> texture, const std::string& type = "environmentMap") = 0;
 		virtual void AddMaterialTexture(const Ref<TextureDepthCubeMap> texture) = 0;
 		virtual void AddMaterialTextureHDR(const std::string& path, const std::string& name) = 0;
 

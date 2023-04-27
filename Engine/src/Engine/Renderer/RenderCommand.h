@@ -43,6 +43,12 @@ namespace Engine
 			s_RendererAPI->DisableCullFace();
 		}
 
+		inline static void EnableCubeMapSeamless()
+		{
+			s_RendererAPI->EnableCubeMapSeamless();
+		}
+
+
 		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray)
 		{
 			s_RendererAPI->DrawIndexed(vertexArray);
