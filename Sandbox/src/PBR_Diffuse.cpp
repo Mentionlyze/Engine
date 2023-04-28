@@ -65,35 +65,43 @@ PBR_Diffuse::PBR_Diffuse() : Layer("PBR Diffuse"), m_CameraController(75.0f, 1.6
 	m_EnvMesh = Engine::Mesh::Create(m_EnvGeometry, std::dynamic_pointer_cast<Engine::OpenGLModelTexture>(m_ModelTexture)->m_Texuters);
 
 	m_IrradianceShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/CubeMap.vert", "assets/shaders/IrradianceConvolution.frag");
+	m_IrradianceShader->Bind();
 
-	m_IrradianceFrameBuffer = Engine::FrameBuffer::Create();
+	m_FrameBuffer->Bind();
+
 	m_IrradianceRenderBuffer = Engine::RenderBuffer::Create(32, 32, GL_DEPTH_COMPONENT24);
 	m_IrradianceTextureEnvCubMap = Engine::TextureCubeMap::CreateEnvMap(32, 32);
-	m_IrradianceFrameBuffer->SetRenderBuffer(std::dynamic_pointer_cast<Engine::OpenGLRenderBuffer>(m_IrradianceRenderBuffer)->GetRendererID());
+	m_FrameBuffer->SetRenderBuffer(std::dynamic_pointer_cast<Engine::OpenGLRenderBuffer>(m_IrradianceRenderBuffer)->GetRendererID());
 
-	m_TextureEnvCubMap->Bind();
+	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_IrradianceShader)->SetMat4("u_Projection", captureProjection);
 
 	Engine::RenderCommand::SetViewport(0, 0, 32, 32);
 
-	m_IrradianceFrameBuffer->Bind();
 
 	for (uint32_t i = 0; i < 6; ++i)
 	{
 		std::dynamic_pointer_cast<Engine::OpenGLShader>(m_IrradianceShader)->SetMat4("u_View", captureViews[i]);
-		m_IrradianceFrameBuffer->SetTexture(
+		m_FrameBuffer->SetTexture(
 			std::dynamic_pointer_cast<Engine::OpenGLTextureCubeMap>(m_IrradianceTextureEnvCubMap)->GetRendererID(), 
 			GL_COLOR_ATTACHMENT0, 
 			GL_TEXTURE_CUBE_MAP_POSITIVE_X + i
 		);
 		Engine::RenderCommand::Clear();
-		m_EnvMesh->Submit(m_IrradianceShader);
+		m_EnvMesh->Submit(m_IrradianceShader, false);
 	}
 
-	m_IrradianceFrameBuffer->Unbind();
+	m_FrameBuffer->Unbind();
 
 	Engine::RenderCommand::SetViewport(0, 0, 1600, 900);
 
 	m_BackgroundShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/Background.vert", "assets/shaders/Background.frag");
+
+	m_ModelTexture = nullptr;
+	m_ModelTexture = Engine::ModelTexture::Create();
+	m_ModelTexture->AddMaterialTexture(m_IrradianceTextureEnvCubMap, "environmentMap");
+	m_EnvMesh = nullptr;
+	m_EnvMesh = Engine::Mesh::Create(m_EnvGeometry, std::dynamic_pointer_cast<Engine::OpenGLModelTexture>(m_ModelTexture)->m_Texuters);
+
 }
 
 void PBR_Diffuse::OnUpdate(Engine::Timestep ts)
