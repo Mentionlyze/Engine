@@ -98,7 +98,7 @@ PBR_Diffuse::PBR_Diffuse() : Layer("PBR Diffuse"), m_CameraController(75.0f, 1.6
 
 	m_ModelTexture = nullptr;
 	m_ModelTexture = Engine::ModelTexture::Create();
-	m_ModelTexture->AddMaterialTexture(m_IrradianceTextureEnvCubMap, "environmentMap");
+	m_ModelTexture->AddMaterialTexture(m_TextureEnvCubMap, "environmentMap");
 	m_EnvMesh = nullptr;
 	m_EnvMesh = Engine::Mesh::Create(m_EnvGeometry, std::dynamic_pointer_cast<Engine::OpenGLModelTexture>(m_ModelTexture)->m_Texuters);
 

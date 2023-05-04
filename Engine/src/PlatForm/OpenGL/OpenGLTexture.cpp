@@ -225,7 +225,7 @@ namespace Engine
 
 	}
 
-	OpenGLTextureCubeMap::OpenGLTextureCubeMap(uint32_t width, uint32_t height) : m_Width(width), m_Height(height)
+	OpenGLTextureCubeMap::OpenGLTextureCubeMap(uint32_t width, uint32_t height, bool mipmapFilter) : m_Width(width), m_Height(height)
 	{
 		glGenTextures(1, &m_RendererId);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererId);
@@ -236,7 +236,14 @@ namespace Engine
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		if (mipmapFilter) 
+		{
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		}
+		else
+		{
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		}
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	}
 
@@ -290,11 +297,10 @@ namespace Engine
 
 	OpenGLTextureColorBuffer::OpenGLTextureColorBuffer(uint32_t width, uint32_t height, uint32_t format, uint32_t type) : m_Width(width), m_Height(height)
 	{
-		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 		glGenTextures(1, &m_RendererID);
 		glBindTexture(GL_TEXTURE_2D, m_RendererID);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, 512, 512, 0, format, type, 0);
-		glTextureStorage2D(m_RendererID, 1, GL_RGB16F, m_Width, m_Height);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, width, height, 0, format, type, 0);
+		//glTextureStorage2D(m_RendererID, 1, GL_RGB16F, m_Width, m_Height);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

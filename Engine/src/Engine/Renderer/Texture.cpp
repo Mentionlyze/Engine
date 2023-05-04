@@ -19,9 +19,9 @@ namespace Engine
 		return CreateRef<OpenGLTextureCubeMap>(faces);
 	}
 
-	Ref<TextureCubeMap> TextureCubeMap::CreateEnvMap(uint32_t width, uint32_t height)
+	Ref<TextureCubeMap> TextureCubeMap::CreateEnvMap(uint32_t width, uint32_t height, bool mipmapFilter)
 	{
-		return CreateRef<OpenGLTextureCubeMap>(width, height);
+		return CreateRef<OpenGLTextureCubeMap>(width, height, mipmapFilter);
 	}
 
 	Ref<TextureDepthCubeMap> TextureDepthCubeMap::Create(uint32_t width, uint32_t height)

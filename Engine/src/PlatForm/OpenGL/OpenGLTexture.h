@@ -67,7 +67,7 @@ namespace Engine
 	{
 	public:
 		OpenGLTextureCubeMap(const std::vector<std::string>& faces);
-		OpenGLTextureCubeMap(uint32_t width, uint32_t height);
+		OpenGLTextureCubeMap(uint32_t width, uint32_t height, bool mipmapFilter);
 		virtual ~OpenGLTextureCubeMap();
 
 		virtual uint32_t GetWidth() const override { return m_Width; }
