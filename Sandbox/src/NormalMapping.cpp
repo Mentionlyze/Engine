@@ -118,7 +118,7 @@ void NormalMapping::OnUpdate(Engine::Timestep ts)
     m_NormalTexture->Bind(1);
 
     glm::mat4 model = glm::mat4(1.0);
-    model = glm::rotate(model, (GLfloat)glfwGetTime() * -1, glm::normalize(glm::vec3(1.0, 0.0, 1.0)));
+    //model = glm::rotate(model, (GLfloat)glfwGetTime() * -1, glm::normalize(glm::vec3(1.0, 0.0, 1.0)));
     Engine::Renderer::Submit(m_VertexArray, m_Shader, model);
 
     Engine::Renderer::EndScene();

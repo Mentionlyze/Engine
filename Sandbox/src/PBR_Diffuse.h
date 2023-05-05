@@ -16,6 +16,7 @@ private:
 
 	Engine::Ref<Engine::Geometry> m_SphereGeometry;
 	Engine::Ref<Engine::Mesh> m_SphereMesh;
+	Engine::Ref<Engine::ModelTexture> m_SphereTextures;
 	Engine::Ref<Engine::Shader> m_Shader;
 
 	Engine::Ref<Engine::Texture2D> m_AlbedoTexture;

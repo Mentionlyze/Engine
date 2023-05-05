@@ -19,6 +19,7 @@
 #include "PBR.h"
 #include "PBR_Diffuse.h"
 #include "PBR_Specular.h"
+#include "PBR_SpecularTexture.h"
 
 class SandBox : public Engine::Application
 {
@@ -31,13 +32,14 @@ public:
 		//PushLayer(new PointLightShadow());
 		//PushLayer(new ShadowMap());
 		//PushLayer(new Skybox());
-		//PushLayer(new NormalMapping());
+		PushLayer(new NormalMapping());
 		//PushLayer(new HDR());
 		//PushLayer(new Blooming());
 		//PushLayer(new FrameBuffer());
 		//PushLayer(new PBR());
 		//PushLayer(new PBR_Diffuse());
-		PushLayer(new PBR_Specular());
+		//PushLayer(new PBR_Specular());
+		//PushLayer(new PBR_SpecularTexture());
 	}
 	~SandBox()
 	{

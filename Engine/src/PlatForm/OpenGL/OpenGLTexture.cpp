@@ -100,7 +100,9 @@ namespace Engine
 
 	void OpenGLTexture2D::Bind(uint32_t slot) const
 	{
-		glBindTextureUnit(slot, m_RendererID);
+		//glBindTextureUnit(slot, m_RendererID);
+		glActiveTexture(GL_TEXTURE0 + slot);
+		glBindTexture(GL_TEXTURE_2D, m_RendererID);
 	}
 
 	void OpenGLTexture2D::Unbind() const
@@ -254,7 +256,7 @@ namespace Engine
 
 	void OpenGLTextureCubeMap::Bind(uint32_t slot) const
 	{
-		glActiveTexture(slot);
+		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererId);
 	}
 
@@ -286,7 +288,7 @@ namespace Engine
 	void OpenGLTextureDepthCubMap::Bind(uint32_t slot) const
 	{
 		//glBindTextureUnit(m_RendererID, slot);
-		glActiveTexture(slot);
+		glActiveTexture(GL_TEXTURE0 + slot);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, m_RendererID);
 	}
 
@@ -315,8 +317,9 @@ namespace Engine
 
 	void OpenGLTextureColorBuffer::Bind(uint32_t slot) const
 	{
-		glBindTextureUnit(slot, m_RendererID);
-		//glBindTexture(GL_TEXTURE_2D, m_RendererID);
+		//glBindTextureUnit(slot, m_RendererID);
+		glActiveTexture(GL_TEXTURE0 + slot);
+		glBindTexture(GL_TEXTURE_2D, m_RendererID);
 	}
 
 	void OpenGLTextureColorBuffer::Unbind() const

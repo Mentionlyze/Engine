@@ -69,14 +69,15 @@ PBR_Specular::PBR_Specular() : Layer("PBR Specular"), m_CameraController(75.0f, 
 	m_EnvMesh = Engine::Mesh::Create(m_EnvGeometry, std::dynamic_pointer_cast<Engine::OpenGLModelTexture>(m_ModelTexture)->m_Texuters);
 
 	m_IrradianceShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/CubeMap.vert", "assets/shaders/IrradianceConvolution.frag");
-	m_IrradianceShader->Bind();
 
-	m_FrameBuffer->Bind();
-
-	m_IrradianceRenderBuffer = Engine::RenderBuffer::Create(32, 32, GL_DEPTH_COMPONENT24);
+	//m_IrradianceRenderBuffer = Engine::RenderBuffer::Create(32, 32, GL_DEPTH_COMPONENT24);
 	m_IrradianceTextureEnvCubMap = Engine::TextureCubeMap::CreateEnvMap(32, 32);
-	m_FrameBuffer->SetRenderBuffer(std::dynamic_pointer_cast<Engine::OpenGLRenderBuffer>(m_IrradianceRenderBuffer)->GetRendererID());
 
+	m_RenderBuffer->Bind();
+	m_FrameBuffer->Bind();
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 32, 32);
+
+	m_IrradianceShader->Bind();
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_IrradianceShader)->SetMat4("u_Projection", captureProjection);
 
 	Engine::RenderCommand::SetViewport(0, 0, 32, 32);
@@ -96,21 +97,25 @@ PBR_Specular::PBR_Specular() : Layer("PBR Specular"), m_CameraController(75.0f, 
 	m_FrameBuffer->Unbind();
 
 	m_PrefilterShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/CubeMap.vert", "assets/shaders/Prefilter.frag");
-	m_PrefilterShader->Bind();
-	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_PrefilterShader)->SetMat4("u_Projection", captureProjection);
 
+	// TODO
 	m_PrefilterTextureEnvCubMap = Engine::TextureCubeMap::CreateEnvMap(128, 128, true);
 	glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
-	m_PrefilterRenderBuffer = Engine::RenderBuffer::Create(128, 128, GL_DEPTH_COMPONENT24);
+
+	m_PrefilterShader->Bind();
+	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_PrefilterShader)->SetMat4("u_Projection", captureProjection);
+	glActiveTexture(0);
+	m_TextureEnvCubMap->Bind();
 
 	m_FrameBuffer->Bind();
 	uint32_t maxMipLevels = 5;
 	for (uint32_t mip = 0; mip < maxMipLevels; ++mip)
 	{
 		// reisze framebuffer according to mip-level size.
-		uint32_t mipWidth = static_cast<unsigned int>(128 * std::pow(0.5, mip));
-		uint32_t mipHeight = static_cast<unsigned int>(128 * std::pow(0.5, mip));
-		m_FrameBuffer->SetRenderBuffer(std::dynamic_pointer_cast<Engine::OpenGLRenderBuffer>(m_PrefilterRenderBuffer)->GetRendererID());
+		uint32_t mipWidth = static_cast<uint32_t>(128 * std::pow(0.5, mip));
+		uint32_t mipHeight = static_cast<uint32_t>(128 * std::pow(0.5, mip));
+		m_RenderBuffer->Bind();
+		//glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipWidth, mipHeight);
 		Engine::RenderCommand::SetViewport(0, 0, mipWidth, mipHeight);
 
@@ -127,23 +132,24 @@ PBR_Specular::PBR_Specular() : Layer("PBR Specular"), m_CameraController(75.0f, 
 			);
 
 			Engine::RenderCommand::Clear();
+			//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			m_EnvMesh->Submit(m_PrefilterShader, false);
 		}
 	}
 
 	m_FrameBuffer->Unbind();
 
-
 	m_BRDFShader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/Blur.vert", "assets/shaders/BRDF.frag");
 	m_BRDFShader->Bind();
 
 	m_BRDFColorBuffer = Engine::TextureColorBuffer::Create(512, 512, GL_RG);
-	m_BRDFRenderBuffer = Engine::RenderBuffer::Create(512, 512, GL_DEPTH_COMPONENT24);
+	//m_BRDFRenderBuffer = Engine::RenderBuffer::Create(512, 512, GL_DEPTH_COMPONENT24);
 
 	m_FrameBuffer->Bind();
-	m_FrameBuffer->SetRenderBuffer(std::dynamic_pointer_cast<Engine::OpenGLRenderBuffer>(m_BRDFRenderBuffer)->GetRendererID());
-	m_FrameBuffer->SetTexture(std::dynamic_pointer_cast<Engine::OpenGLTextureColorBuffer>(m_BRDFColorBuffer)->GetRendererID(), GL_COLOR_ATTACHMENT0);
+	m_RenderBuffer->Bind();
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
+	//m_FrameBuffer->SetRenderBuffer(std::dynamic_pointer_cast<Engine::OpenGLRenderBuffer>(m_BRDFRenderBuffer)->GetRendererID());
+	m_FrameBuffer->SetTexture(std::dynamic_pointer_cast<Engine::OpenGLTextureColorBuffer>(m_BRDFColorBuffer)->GetRendererID(), GL_COLOR_ATTACHMENT0);
 
 	m_VertexArray = Engine::VertexArray::Create();
 
@@ -175,7 +181,7 @@ PBR_Specular::PBR_Specular() : Layer("PBR Specular"), m_CameraController(75.0f, 
 	Engine::RenderCommand::Clear();
 
 	m_BRDFColorBuffer->Bind();
-	Engine::Renderer::SubmitStrip(m_VertexArray, m_BRDFShader, glm::mat4(1.0));
+	Engine::Renderer::Submit(m_VertexArray, m_BRDFShader, glm::mat4(1.0));
 
 	m_FrameBuffer->Unbind();
 
@@ -189,9 +195,9 @@ PBR_Specular::PBR_Specular() : Layer("PBR Specular"), m_CameraController(75.0f, 
 	m_EnvMesh = nullptr;
 	m_EnvMesh = Engine::Mesh::Create(m_EnvGeometry, std::dynamic_pointer_cast<Engine::OpenGLModelTexture>(m_ModelTexture)->m_Texuters);
 
-//uniform samplerCube irradianceMap;
-//uniform samplerCube prefilterMap;
-//uniform sampler2D brdfLUT;
+	//uniform samplerCube irradianceMap;
+	//uniform samplerCube prefilterMap;
+	//uniform sampler2D brdfLUT;
 
 	m_SphereTextures->AddMaterialTexture(m_IrradianceTextureEnvCubMap, "irradianceMap");
 	m_SphereTextures->AddMaterialTexture(m_PrefilterTextureEnvCubMap, "prefilterMap");
@@ -226,7 +232,7 @@ void PBR_Specular::OnUpdate(Engine::Timestep ts)
 			);
 
 			m_SphereGeometry->SetTransform(transform);
-			std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetMat4("normalMatrix", glm::transpose(glm::inverse(transform)));
+			std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetMat3("normalMatrix", glm::transpose(glm::inverse(glm::mat3(transform))));
 			m_SphereMesh->SubmitStrip(m_Shader);
 		}
 	}
@@ -254,7 +260,7 @@ void PBR_Specular::OnUpdate(Engine::Timestep ts)
 		m_SphereMesh->SubmitStrip(m_Shader);
 	}
 
-	m_PrefilterTextureEnvCubMap->Bind();
+	//m_PrefilterTextureEnvCubMap->Bind();
 	m_EnvMesh->Submit(m_BackgroundShader);
 
 	//m_BRDFColorBuffer->Bind();

@@ -7,9 +7,9 @@ PBR_Diffuse::PBR_Diffuse() : Layer("PBR Diffuse"), m_CameraController(75.0f, 1.6
     glDepthFunc(GL_LEQUAL);
 
 	m_SphereGeometry = Engine::Geometry::CreateSphere(glm::mat4(1.0f));
-	m_SphereMesh = Engine::Mesh::Create(m_SphereGeometry, {});
+	m_SphereTextures = Engine::ModelTexture::Create();
 	
-	m_Shader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/PBR.vert", "assets/shaders/PBR.frag");
+	m_Shader = Engine::Renderer::GetShaderLibrary()->Load("assets/shaders/PBR.vert", "assets/shaders/PBRDiffuse.frag");
 	m_Shader->Bind();
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat3("albedo", glm::vec3(0.5f, 0.0f, 0.0f));
 	std::dynamic_pointer_cast<Engine::OpenGLShader>(m_Shader)->SetFloat("ao", 1.0f);
@@ -98,10 +98,13 @@ PBR_Diffuse::PBR_Diffuse() : Layer("PBR Diffuse"), m_CameraController(75.0f, 1.6
 
 	m_ModelTexture = nullptr;
 	m_ModelTexture = Engine::ModelTexture::Create();
-	m_ModelTexture->AddMaterialTexture(m_TextureEnvCubMap, "environmentMap");
+	m_ModelTexture->AddMaterialTexture(m_IrradianceTextureEnvCubMap, "environmentMap");
 	m_EnvMesh = nullptr;
 	m_EnvMesh = Engine::Mesh::Create(m_EnvGeometry, std::dynamic_pointer_cast<Engine::OpenGLModelTexture>(m_ModelTexture)->m_Texuters);
 
+	m_SphereTextures->AddMaterialTexture(m_IrradianceTextureEnvCubMap, "environmentMap");
+
+	m_SphereMesh = Engine::Mesh::Create(m_SphereGeometry, std::dynamic_pointer_cast<Engine::OpenGLModelTexture>(m_SphereTextures)->m_Texuters);
 }
 
 void PBR_Diffuse::OnUpdate(Engine::Timestep ts)
